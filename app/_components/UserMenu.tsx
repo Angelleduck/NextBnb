@@ -4,16 +4,21 @@ import Image from "next/image";
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import UserItem from "./UserItem";
+import useLoginModal from "../hooks/useLoginModal";
+import useRegisterModal from "../hooks/useRegisterModal";
 
 export default function UserMenu() {
-  const [active, SetActive] = useState(false);
+  const [isOpen, SetIsOpen] = useState(false);
+  const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
+
   return (
     <div className="flex items-center gap-4 relative">
       <h3 className="hidden min-[824px]:block cursor-pointer font-semibold py-3 px-4 hover:bg-gray-100 rounded-full text-sm">
         Nextbnb your home
       </h3>
       <div
-        onClick={() => SetActive((value) => !value)}
+        onClick={() => SetIsOpen((value) => !value)}
         className="p-4 flex items-center border rounded-full sm:py-1 sm:px-2 gap-3 cursor-pointer"
       >
         <AiOutlineMenu />
@@ -28,10 +33,10 @@ export default function UserMenu() {
           />
         </picture>
       </div>
-      {active && (
+      {isOpen && (
         <div className="absolute shadow-md right-0 top-12 w-[40vw] md:w-3/4 bg-white rounded-xl overflow-hidden text-sm font-semibold cursor-pointer">
-          <UserItem>Login</UserItem>
-          <UserItem>Sign up</UserItem>
+          <UserItem onClick={loginModal.onOpen}>Login</UserItem>
+          <UserItem onClick={registerModal.onOpen}>Sign up</UserItem>
         </div>
       )}
     </div>
