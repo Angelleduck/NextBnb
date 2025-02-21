@@ -4,8 +4,13 @@ import Logo from "./Logo";
 import Categories from "./Categories";
 import Container from "./Container";
 import UserMenu from "./UserMenu";
+import { User } from "@prisma/client";
 
-export default function Navbar() {
+interface currentUserProps {
+  currentUser: User | null;
+}
+
+export default function Navbar({ currentUser }: currentUserProps) {
   return (
     <header className="shadow-sm">
       <Container>
@@ -26,7 +31,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <UserMenu />
+          <UserMenu currentUser={currentUser} />
         </div>
       </Container>
       <hr />

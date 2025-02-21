@@ -6,8 +6,13 @@ import { AiOutlineMenu } from "react-icons/ai";
 import UserItem from "./UserItem";
 import useLoginModal from "../hooks/useLoginModal";
 import useRegisterModal from "../hooks/useRegisterModal";
+import { User } from "@prisma/client";
+import { signOut } from "next-auth/react";
 
-export default function UserMenu() {
+interface currentUserProps {
+  currentUser: User | null;
+}
+export default function UserMenu({ currentUser }: currentUserProps) {
   const [isOpen, SetIsOpen] = useState(false);
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
@@ -23,20 +28,40 @@ export default function UserMenu() {
       >
         <AiOutlineMenu />
 
-        <picture className="hidden sm:block ">
-          <Image
-            src="/images/placeholder.jpg"
-            alt="user"
-            width={30}
-            height={30}
-            className="rounded-full"
-          />
+        <picture className="hidden sm:block">
+          {currentUser ? (
+            <div className="bg-red-600 h-[30px] w-[30px] rounded-full"></div>
+          ) : (
+            <Image
+              src="/images/placeholder.jpg"
+              alt="user"
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
+          )}
         </picture>
       </div>
       {isOpen && (
         <div className="absolute shadow-md right-0 top-12 w-[40vw] md:w-3/4 bg-white rounded-xl overflow-hidden text-sm font-semibold cursor-pointer">
-          <UserItem onClick={loginModal.onOpen}>Login</UserItem>
-          <UserItem onClick={registerModal.onOpen}>Sign up</UserItem>
+          {currentUser ? (
+            <>
+              <UserItem onClick={() => {}}>trips</UserItem>
+              <hr />
+              <UserItem
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                Log out
+              </UserItem>
+            </>
+          ) : (
+            <>
+              <UserItem onClick={loginModal.onOpen}>Login</UserItem>
+              <UserItem onClick={registerModal.onOpen}>Sign up</UserItem>
+            </>
+          )}
         </div>
       )}
     </div>

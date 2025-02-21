@@ -6,9 +6,24 @@ import { FaGithub } from "react-icons/fa";
 import Input from "../Input";
 import Button from "../Button";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import registerAction from "@/app/actions/register";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 export default function RegisterModal() {
   const registerModal = useRegisterModal();
+  const [stateError, setStateError] = useState(false);
+
+  async function clientAction(formData: FormData) {
+    const res = await registerAction(formData);
+
+    if (res?.error) {
+      setStateError(true);
+      toast.error(res.error);
+    } else {
+      toast.success("Account has been registered");
+    }
+  }
   const Body = (
     <div className="px-6 pt-6 space-y-4">
       <div>
@@ -16,9 +31,14 @@ export default function RegisterModal() {
         <p className="text-gray-400">Create an account</p>
       </div>
 
-      <Input label="Email" type="email" id="email" />
-      <Input label="Name" type="text" id="name" />
-      <Input label="Password" type="password" id="password" />
+      <Input label="email" type="email" id="email" error={stateError} />
+      <Input label="name" type="text" id="name" error={stateError} />
+      <Input
+        label="password"
+        type="password"
+        id="password"
+        error={stateError}
+      />
 
       <div className=" pt-6 pb-1">
         <button className="bg-primary w-full rounded-lg py-4 text-white hover:opacity-80">
@@ -54,6 +74,7 @@ export default function RegisterModal() {
       Footer={Footer}
       isOpen={registerModal.isOpen}
       onClose={registerModal.onClose}
+      clientAction={clientAction}
     />
   );
 }

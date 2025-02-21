@@ -6,9 +6,28 @@ import { FaGithub } from "react-icons/fa";
 import Input from "../Input";
 import Button from "../Button";
 import useLoginModal from "@/app/hooks/useLoginModal";
+import { useState } from "react";
+import loginAction from "@/app/actions/login";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginModal() {
   const loginModal = useLoginModal();
+  const [stateError, setStateError] = useState(false);
+  const router = useRouter();
+
+  async function clientAction(formData: FormData) {
+    const res = await loginAction(formData);
+
+    if (res?.error) {
+      setStateError(true);
+      toast.error(res.error);
+    } else {
+      toast.success("you are logged in");
+      loginModal.onClose();
+      router.refresh();
+    }
+  }
   const Body = (
     <div className="px-6 pt-6 space-y-4">
       <div>
@@ -16,8 +35,13 @@ export default function LoginModal() {
         <p className="text-gray-400">Login to your account!</p>
       </div>
 
-      <Input label="Email" type="email" id="email" />
-      <Input label="Password" type="password" id="password" />
+      <Input label="email" type="email" id="email" error={stateError} />
+      <Input
+        label="password"
+        type="password"
+        id="password"
+        error={stateError}
+      />
 
       <div className=" pt-6 pb-1">
         <button className="bg-primary w-full rounded-lg py-4 text-white hover:opacity-80">
@@ -53,6 +77,7 @@ export default function LoginModal() {
       Footer={Footer}
       isOpen={loginModal.isOpen}
       onClose={loginModal.onClose}
+      clientAction={clientAction}
     />
   );
 }

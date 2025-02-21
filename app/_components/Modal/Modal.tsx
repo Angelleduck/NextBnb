@@ -9,6 +9,7 @@ interface ModalProps {
   Footer: JSX.Element;
   isOpen: boolean;
   onClose: () => void;
+  clientAction: (formData: FormData) => Promise<void>;
 }
 export default function Modal({
   title,
@@ -16,6 +17,7 @@ export default function Modal({
   Footer,
   isOpen,
   onClose,
+  clientAction,
 }: ModalProps) {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -23,13 +25,21 @@ export default function Modal({
     setShowModal(isOpen);
   }, [isOpen]);
 
+  const handleClose = () => {
+    setShowModal(false);
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  };
+
   if (!isOpen) {
     return;
   }
   return (
     <div className="inset-0 bg-neutral-800/70 fixed z-10 overflow-auto  ">
-      <div
-        className={`transition w-full md:max-w-[525px] bg-white mx-auto my-10 rounded-md ${
+      <form
+        action={clientAction}
+        className={`transition duration-300 w-full md:max-w-[525px] bg-white mx-auto my-10 rounded-md ${
           showModal ? "translate-y-0" : "translate-y-full"
         } ${showModal ? "opacity-100" : "opacity-0"}`}
       >
@@ -37,9 +47,12 @@ export default function Modal({
 
         <div className="flex items-center justify-center p-6 relative">
           <div className="text-lg font-semibold">{title}</div>
-          <button className="absolute left-9 hover:opacity-70">
-            <IoMdClose size={18} onClick={onClose} />
-          </button>
+
+          <IoMdClose
+            size={18}
+            onClick={handleClose}
+            className="absolute left-9 hover:opacity-70 cursor-pointer"
+          />
         </div>
 
         <hr />
@@ -49,7 +62,7 @@ export default function Modal({
         {Body}
         {/* footer */}
         {Footer}
-      </div>
+      </form>
     </div>
   );
 }
