@@ -29,6 +29,6 @@ export default async function registerAction(formData: FormData) {
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    return { error: "error happened" };
+    return { error: "email already exist" };
   }
 }

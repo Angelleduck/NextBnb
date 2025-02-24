@@ -9,12 +9,42 @@ import useRegisterModal from "@/app/hooks/useRegisterModal";
 import registerAction from "@/app/actions/register";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { z } from "zod";
+
+const registerSchema = z.object({
+  email: z.string().email("Enter a valid email address"),
+  name: z
+    .string()
+    .min(4, { message: "name must be at least 4 character long" })
+    .max(12, { message: "name must be at most 12 characters long" }),
+  password: z
+    .string()
+    .min(8, { message: "password must be at least 8 characters long" })
+    .max(20, { message: "password must be at most 20 character long" })
+    .regex(/[A-Z]/, "password must contain a uppercase letter")
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "password must contain a special character"
+    ),
+});
 
 export default function RegisterModal() {
   const registerModal = useRegisterModal();
   const [stateError, setStateError] = useState(false);
 
   async function clientAction(formData: FormData) {
+    //validating the data before sending to the server
+    const email = formData.get("email");
+    const name = formData.get("name");
+    const password = formData.get("password");
+
+    const validation = registerSchema.safeParse({ email, name, password });
+
+    if (validation.success == false) {
+      toast.error(`${validation.error?.errors.at(0)?.message}`);
+      return;
+    }
+
     const res = await registerAction(formData);
 
     if (res?.error) {

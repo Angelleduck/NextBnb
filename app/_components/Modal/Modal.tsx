@@ -36,8 +36,14 @@ export default function Modal({
     return;
   }
   return (
-    <div className="inset-0 bg-neutral-800/70 fixed z-10 overflow-auto  ">
+    <div
+      onClick={handleClose}
+      className="inset-0 bg-neutral-800/70 fixed z-10 overflow-auto  "
+    >
       <form
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         action={clientAction}
         className={`transition duration-300 w-full md:max-w-[525px] bg-white mx-auto my-10 rounded-md ${
           showModal ? "translate-y-0" : "translate-y-full"

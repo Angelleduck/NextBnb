@@ -48,18 +48,26 @@ export default function UserMenu({ currentUser }: currentUserProps) {
             <>
               <UserItem onClick={() => {}}>trips</UserItem>
               <hr />
-              <UserItem
-                onClick={() => {
-                  signOut();
-                }}
-              >
-                Log out
-              </UserItem>
+              <UserItem onClick={signOut}>Log out</UserItem>
             </>
           ) : (
             <>
-              <UserItem onClick={loginModal.onOpen}>Login</UserItem>
-              <UserItem onClick={registerModal.onOpen}>Sign up</UserItem>
+              <UserItem
+                onClick={() => {
+                  loginModal.onOpen();
+                  SetIsOpen(false);
+                }}
+              >
+                Login
+              </UserItem>
+              <UserItem
+                onClick={() => {
+                  registerModal.onOpen();
+                  SetIsOpen(false);
+                }}
+              >
+                Sign up
+              </UserItem>
             </>
           )}
         </div>
