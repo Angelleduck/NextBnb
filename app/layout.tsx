@@ -6,6 +6,7 @@ import LoginModal from "./_components/Modal/LoginModal";
 import RegisterModal from "./_components/Modal/RegisterModal";
 import { Toaster } from "react-hot-toast";
 import getCurrentUser from "./actions/getCurrentUser";
+import CreateRentModal from "./_components/Modal/CreateRentModal";
 
 export const metadata: Metadata = {
   title: "Nextbnb",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 const nunito = Nunito({
   subsets: ["latin"],
+  display: "swap",
 });
 export default async function RootLayout({
   children,
@@ -26,6 +28,7 @@ export default async function RootLayout({
       <body className={`${nunito.className}`}>
         <LoginModal />
         <RegisterModal />
+        <CreateRentModal />
         <Navbar currentUser={currentUser} />
         <Toaster />
         {children}

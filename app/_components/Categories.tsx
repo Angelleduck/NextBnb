@@ -44,3 +44,5 @@ export default function Categories() {
     </Container>
   );
 }
+
+export { navigationIcon };

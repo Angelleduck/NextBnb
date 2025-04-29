@@ -8,6 +8,7 @@ import useLoginModal from "../hooks/useLoginModal";
 import useRegisterModal from "../hooks/useRegisterModal";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
+import useCreateRentModal from "../hooks/useCreateRentModal";
 
 interface currentUserProps {
   currentUser: User | null;
@@ -16,10 +17,21 @@ export default function UserMenu({ currentUser }: currentUserProps) {
   const [isOpen, SetIsOpen] = useState(false);
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
+  const CreateRentModal = useCreateRentModal();
+
+  function onRent() {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+    CreateRentModal.onOpen();
+  }
 
   return (
     <div className="flex items-center gap-4 relative">
-      <h3 className="hidden min-[824px]:block cursor-pointer font-semibold py-3 px-4 hover:bg-gray-100 rounded-full text-sm">
+      <h3
+        onClick={onRent}
+        className="hidden min-[824px]:block cursor-pointer font-semibold py-3 px-4 hover:bg-gray-100 rounded-full text-sm"
+      >
         Nextbnb your home
       </h3>
       <div
