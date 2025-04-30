@@ -13,6 +13,7 @@ interface country {
 
 interface LocationProps {
   handleLocation: Dispatch<SetStateAction<LocationType | undefined>>;
+  location: LocationType | undefined;
 }
 
 const formatOptionLabel = ({ label, flag, region }: country) => (
@@ -24,12 +25,16 @@ const formatOptionLabel = ({ label, flag, region }: country) => (
   </div>
 );
 
-export default function SelectCountry({ handleLocation }: LocationProps) {
+export default function SelectCountry({
+  handleLocation,
+  location,
+}: LocationProps) {
   const { getAll } = useCountries();
   return (
     <Select
       placeholder="Anywhere"
       isClearable
+      value={location}
       onChange={(country) => {
         handleLocation(country as country);
       }}

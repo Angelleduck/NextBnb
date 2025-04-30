@@ -8,6 +8,9 @@ import CategoryInput from "../CategoryInput";
 import Heading from "../Heading";
 import dynamic from "next/dynamic";
 import SelectCountry from "../SelectCountry";
+import Counter from "../Counter";
+import ImageUpload from "../ImageUpload";
+import Input from "../Input";
 
 export interface LocationType {
   value: string;
@@ -20,12 +23,26 @@ export interface LocationType {
 enum Steps {
   category = 0,
   location = 1,
+  info = 2,
+  image = 3,
+  describe = 4,
+  price = 5,
 }
+
 export default function CreateRentModal() {
   const createRentModal = useCreateRentModal();
   const [step, setStep] = useState(Steps.category);
   const [category, setCategory] = useState("");
-  const [location, setlocation] = useState<LocationType>();
+  const [location, setLocation] = useState<LocationType>();
+  const [imageSrc, setImageSrc] = useState<File>();
+  const [titleInput, setTitleInput] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("1");
+
+  const [guestCount, setGuestCount] = useState(1);
+  const [roomCount, setRoomCount] = useState(1);
+  const [bathroomCount, setBathroomCount] = useState(1);
+  const [error, setError] = useState(false);
 
   const Map = useMemo(
     () =>
@@ -85,26 +102,128 @@ export default function CreateRentModal() {
           />
         </div>
 
-        <SelectCountry handleLocation={setlocation} />
+        <SelectCountry handleLocation={setLocation} location={location} />
 
         <Map markerPosition={location?.latlng} />
       </div>
     );
   }
+  if (step === Steps.info) {
+    body = (
+      <div className="p-6 flex flex-col gap-8">
+        <div>
+          <Heading
+            title="Share information about your place ?"
+            subtitle="What amenities do you have?"
+          />
+        </div>
+        <Counter
+          title="Guests"
+          subTitle="How many guests do you allow?"
+          value={guestCount}
+          handleCount={setGuestCount}
+        />
+        <hr />
+        <Counter
+          title="Rooms"
+          subTitle="How many rooms do you have?"
+          value={roomCount}
+          handleCount={setRoomCount}
+        />
+        <hr />
+        <Counter
+          title="Bathrooms"
+          subTitle="How many bathrooms do you have?"
+          value={bathroomCount}
+          handleCount={setBathroomCount}
+        />
+      </div>
+    );
+  }
 
+  if (step === Steps.image) {
+    body = (
+      <div className="p-6 flex flex-col gap-6">
+        <div>
+          <Heading
+            title="Add a photo of your place"
+            subtitle="Show guests what your place looks like!"
+          />
+        </div>
+        <ImageUpload handleImage={setImageSrc} imageUploaded={imageSrc} />
+      </div>
+    );
+  }
+
+  if (step === Steps.describe) {
+    body = (
+      <div className="p-6 flex flex-col gap-6">
+        <div>
+          <Heading
+            title="How would you describe your place ?"
+            subtitle="Short and sweet works best!"
+          />
+        </div>
+
+        <Input
+          value={titleInput}
+          onChange={(e) => setTitleInput(e.target.value)}
+          label="Title"
+          id="title"
+          error={error}
+        />
+        <hr />
+        <Input
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          label="Description"
+          id="description"
+          error={error}
+        />
+      </div>
+    );
+  }
+
+  if (step === Steps.price) {
+    body = (
+      <div className="p-6 flex flex-col gap-6">
+        <div>
+          <Heading
+            title="Now, set your price"
+            subtitle="How much do you charge per night ?"
+          />
+        </div>
+        <Input
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          type="number"
+          label="Price"
+          id="price"
+          error={error}
+          formatPrice
+        />
+      </div>
+    );
+  }
   const footer = (
     <div className="p-6 pt-4 flex gap-2">
       {step !== Steps.category && (
         <button
           onClick={onBack}
           type="button"
-          className=" w-full py-3 rounded-md border border-black"
+          className=" w-full py-3 rounded-md border-2 border-black"
         >
           Back
         </button>
       )}
       <button
-        onClick={onNext}
+        onClick={() => {
+          if (step !== Steps.price) {
+            onNext();
+          } else {
+            // clientAction("24");
+          }
+        }}
         type="button"
         className="bg-primary w-full py-3 rounded-md"
       >
