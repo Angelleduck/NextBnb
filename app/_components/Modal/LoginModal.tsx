@@ -10,9 +10,11 @@ import { useState } from "react";
 import loginAction from "@/app/actions/login";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useRegisterModal from "@/app/hooks/useRegisterModal";
 
 export default function LoginModal() {
   const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
   const [stateError, setStateError] = useState(false);
   const router = useRouter();
 
@@ -28,8 +30,13 @@ export default function LoginModal() {
       router.refresh();
     }
   }
+
+  const handleCreateAccount = () => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  };
   const Body = (
-    <div className="px-6 pt-6 space-y-4">
+    <div className="p-6 space-y-4">
       <div>
         <h1 className="text-2xl font-bold">Welcome Back</h1>
         <p className="text-gray-400">Login to your account!</p>
@@ -42,18 +49,12 @@ export default function LoginModal() {
         id="password"
         error={stateError}
       />
-
-      <div className=" pt-6 pb-1">
-        <button className="bg-primary w-full rounded-lg py-4 text-white hover:opacity-80">
-          Continue
-        </button>
-      </div>
-      <hr />
     </div>
   );
 
   const Footer = (
-    <div className="px-6 pb-6 mt-4 space-y-4">
+    <div className="mt-4 space-y-4">
+      <hr />
       <Button label="continue with Google" Icon={FcGoogle} />
 
       <button className="relative border-2 w-full border-black rounded-lg p-3 hover:opacity-80">
@@ -61,9 +62,12 @@ export default function LoginModal() {
         continue with Github
       </button>
 
-      <div className="flex gap-2 justify-center font-light pt-2">
+      <div className="flex flex-col gap-2 justify-center font-light pt-2 min-[430px]:flex-row">
         <p className="text-neutral-500">First time using Airbnb ?</p>
-        <span className="text-slate-800 cursor-pointer hover:underline">
+        <span
+          onClick={handleCreateAccount}
+          className="text-slate-800 cursor-pointer hover:underline"
+        >
           Create an account
         </span>
       </div>
@@ -78,6 +82,7 @@ export default function LoginModal() {
       isOpen={loginModal.isOpen}
       onClose={loginModal.onClose}
       clientAction={clientAction}
+      actionLabel="Continue"
     />
   );
 }

@@ -11,6 +11,8 @@ import SelectCountry from "../SelectCountry";
 import Counter from "../Counter";
 import ImageUpload from "../ImageUpload";
 import Input from "../Input";
+import createListing from "@/app/actions/createListing";
+import { useRouter } from "next/navigation";
 
 export interface LocationType {
   value: string;
@@ -30,19 +32,20 @@ enum Steps {
 }
 
 export default function CreateRentModal() {
+  const router = useRouter();
   const createRentModal = useCreateRentModal();
   const [step, setStep] = useState(Steps.category);
+  const [error, setError] = useState("");
+
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState<LocationType>();
-  const [imageSrc, setImageSrc] = useState<File>();
+  const [image, setImage] = useState<File>();
   const [titleInput, setTitleInput] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("1");
-
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
   const [bathroomCount, setBathroomCount] = useState(1);
-  const [error, setError] = useState(false);
 
   const Map = useMemo(
     () =>
@@ -58,17 +61,82 @@ export default function CreateRentModal() {
     [location]
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async function clientAction(formdata: FormData) {
-    console.log("hi");
+  const actionLabel = step === Steps.price ? "Create" : "Next";
+  const secondaryActionLabel = step !== Steps.category && "Back";
+
+  async function clientAction() {
+    // Validation
+    if (step == Steps.category && !category) {
+      setError("Please select category");
+      return;
+    }
+    if (step == Steps.location && !location) {
+      setError("Please select a place");
+      return;
+    }
+    if (step == Steps.image && !image) {
+      setError("Please provide an image");
+      return;
+    }
+    setError("");
+
+    // When we reach price we can now submit the data
+    if (step !== Steps.price) {
+      return onNext();
+    }
+
+    //I define here because of typescript, optimize later in case
+    //we don't go the URL after fetching
+    let imageSrc: string =
+      "https://res.cloudinary.com/ducsubyd2/image/upload/v1746128002/iwmiinowal5japv6ohwb.png";
+    const locationValue = location!.value;
+    const formData = new FormData();
+
+    // async function submitData() {
+    //   // Image will never be undefined because of the above validaitons
+    //   formData.append("file", image!);
+    //   formData.append("upload_preset", "upload-post-preset");
+
+    //   const res = await fetch(
+    //     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+    //     {
+    //       method: "POST",
+    //       body: formData,
+    //     }
+    //   );
+    //   const data = await res.json();
+
+    //   // handle this later in case error
+    //   //set link of image
+    //   imageSrc = data.secure_url;
+    // }
+
+    // await submitData();
+
+    const data = {
+      category,
+      location: locationValue,
+      imageSrc,
+      titleInput,
+      description,
+      price,
+      guestCount,
+      roomCount,
+      bathroomCount,
+    };
+
+    await createListing(data);
+    router.refresh();
+    createRentModal.onClose();
   }
 
   const onNext = () => {
     setStep((state) => state + 1);
   };
-  const onBack = () => {
+  const secondaryAction = () => {
     setStep((state) => state - 1);
   };
+
   const title = "Nextbnb your home!";
   let body = (
     <div className="p-6">
@@ -150,7 +218,7 @@ export default function CreateRentModal() {
             subtitle="Show guests what your place looks like!"
           />
         </div>
-        <ImageUpload handleImage={setImageSrc} imageUploaded={imageSrc} />
+        <ImageUpload handleImage={setImage} imageUploaded={image} />
       </div>
     );
   }
@@ -170,7 +238,7 @@ export default function CreateRentModal() {
           onChange={(e) => setTitleInput(e.target.value)}
           label="Title"
           id="title"
-          error={error}
+          required
         />
         <hr />
         <Input
@@ -178,7 +246,7 @@ export default function CreateRentModal() {
           onChange={(e) => setDescription(e.target.value)}
           label="Description"
           id="description"
-          error={error}
+          required
         />
       </div>
     );
@@ -199,46 +267,24 @@ export default function CreateRentModal() {
           type="number"
           label="Price"
           id="price"
-          error={error}
           formatPrice
         />
       </div>
     );
   }
-  const footer = (
-    <div className="p-6 pt-4 flex gap-2">
-      {step !== Steps.category && (
-        <button
-          onClick={onBack}
-          type="button"
-          className=" w-full py-3 rounded-md border-2 border-black"
-        >
-          Back
-        </button>
-      )}
-      <button
-        onClick={() => {
-          if (step !== Steps.price) {
-            onNext();
-          } else {
-            // clientAction("24");
-          }
-        }}
-        type="button"
-        className="bg-primary w-full py-3 rounded-md"
-      >
-        Next
-      </button>
-    </div>
-  );
+
   return (
     <Modal
       title={title}
       isOpen={createRentModal.isOpen}
       onClose={createRentModal.onClose}
       Body={body}
-      Footer={footer}
+      // Footer={footer}
       clientAction={clientAction}
+      actionLabel={actionLabel}
+      secondaryAction={secondaryAction}
+      secondaryActionLabel={secondaryActionLabel}
+      error={error}
     />
   );
 }

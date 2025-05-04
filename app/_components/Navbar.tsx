@@ -12,7 +12,7 @@ interface currentUserProps {
 
 export default function Navbar({ currentUser }: currentUserProps) {
   return (
-    <header className="shadow-sm">
+    <header className="shadow-sm fixed top-0 w-full">
       <Container>
         <div className=" flex py-4 justify-between gap-3">
           <Logo />

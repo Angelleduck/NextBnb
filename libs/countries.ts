@@ -8,8 +8,11 @@ const formattedCountry = countries.map((country) => ({
   latlng: country.latlng,
 }));
 
-export default function useCountries() {
+export default function getCountries() {
   const getAll = formattedCountry;
+  const getByValue = (value: string) => {
+    return formattedCountry.find((country) => value === country.value);
+  };
 
-  return { getAll };
+  return { getAll, getByValue };
 }

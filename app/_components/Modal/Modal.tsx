@@ -6,10 +6,14 @@ import { useEffect, useState } from "react";
 interface ModalProps {
   title: string;
   Body: JSX.Element;
-  Footer: JSX.Element;
+  Footer?: JSX.Element;
   isOpen: boolean;
+  actionLabel: string;
+  secondaryActionLabel?: string | false;
+  error?: string;
   onClose: () => void;
   clientAction: (formData: FormData) => Promise<void>;
+  secondaryAction?: () => void;
 }
 export default function Modal({
   title,
@@ -18,6 +22,10 @@ export default function Modal({
   isOpen,
   onClose,
   clientAction,
+  secondaryActionLabel,
+  secondaryAction,
+  actionLabel,
+  error,
 }: ModalProps) {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -64,10 +72,27 @@ export default function Modal({
         <hr />
 
         {/* Body */}
-
         {Body}
-        {/* footer */}
-        {Footer}
+        <div className="p-6 flex flex-col gap-2">
+          {error && <p className="text-red-500">{error}</p>}
+          <div className="flex gap-2">
+            {secondaryActionLabel && (
+              <button
+                onClick={secondaryAction}
+                type="button"
+                className="w-full rounded-lg py-3 hover:opacity-80 border-2 border-black"
+              >
+                {secondaryActionLabel}
+              </button>
+            )}
+            <button className="bg-primary w-full rounded-lg py-3 text-white hover:opacity-80">
+              {actionLabel}
+            </button>
+          </div>
+
+          {/* footer */}
+          {Footer}
+        </div>
       </form>
     </div>
   );

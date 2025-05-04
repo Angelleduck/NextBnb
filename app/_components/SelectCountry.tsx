@@ -1,7 +1,7 @@
 import Select from "react-select";
 import { Dispatch, SetStateAction } from "react";
-import useCountries from "../hooks/useCountries";
 import { LocationType } from "./Modal/CreateRentModal";
+import getCountries from "@/libs/countries";
 
 interface country {
   value: string;
@@ -29,7 +29,7 @@ export default function SelectCountry({
   handleLocation,
   location,
 }: LocationProps) {
-  const { getAll } = useCountries();
+  const { getAll } = getCountries();
   return (
     <Select
       placeholder="Anywhere"

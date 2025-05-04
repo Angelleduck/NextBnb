@@ -17,27 +17,6 @@ export default function ImageUpload({
 
     const objectUrl = URL.createObjectURL(imageUploaded);
     setPreviewUrl(objectUrl);
-
-    // const formData = new FormData();
-
-    // formData.append("file", imageUploaded);
-    // formData.append("upload_preset", "upload-post-preset");
-
-    // console.log(formData.get("file"));
-
-    // async function ft() {
-    //   const res = await fetch(
-    //     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
-    //     {
-    //       method: "POST",
-    //       body: formData,
-    //     }
-    //   );
-    //   const data = await res.json();
-
-    //   console.log(data);
-    // }
-    // ft();
     // Clean up the object URL
     return () => URL.revokeObjectURL(objectUrl);
   }, [imageUploaded]);

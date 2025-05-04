@@ -22,6 +22,7 @@ model User {
   image         String?
   favoriteIds   String[]
   accounts      Account[]
+  listings      Listing[]
  
   @@map("users")
 }
@@ -44,4 +45,21 @@ model Account {
  
   @@unique([provider, providerAccountId])
   @@map("accounts")
+}
+
+model Listing{
+  id String @id @default(uuid())
+  userId String @map("user_id")
+  category String
+  location String
+  imageSrc String
+  title String
+  description String
+  price String
+  guestCount Int
+  roomCount Int
+  bathroomCount Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("listings")
 }

@@ -5,10 +5,11 @@ interface InputProps {
   label: string;
   type?: string;
   id: string;
-  error: boolean;
+  error?: boolean;
   formatPrice?: boolean;
   value?: string | number;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
 }
 export default function Input({
   label,
@@ -18,9 +19,10 @@ export default function Input({
   formatPrice,
   value,
   onChange,
+  required,
 }: InputProps) {
   return (
-    <div className={`relative ${formatPrice && "flex items-center"}`}>
+    <div className={`relative ${formatPrice ? "flex items-center" : ""}`}>
       {formatPrice && <BiDollar size={24} className="absolute left-2 " />}
       <input
         onChange={onChange}
@@ -29,6 +31,7 @@ export default function Input({
         name={label}
         min={0}
         id={id}
+        required={required}
         placeholder=" "
         className={`peer w-full outline-none p-4 pt-6 ${
           formatPrice && "pl-9"
