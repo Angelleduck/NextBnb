@@ -46,5 +46,4 @@ export default async function createListing(data: DataProps) {
       price,
     },
   });
-  console.log(data);
 }

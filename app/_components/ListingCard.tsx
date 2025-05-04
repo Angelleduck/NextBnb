@@ -11,7 +11,7 @@ interface ListingProps {
 
 export default function ListingCard({ listing, user }: ListingProps) {
   const { getByValue } = getCountries();
-  //after change to locationValue since it's a bit confusing
+  //after change to locationValue inside the db since it's a bit confusing
   const location = getByValue(listing.location);
 
   return (

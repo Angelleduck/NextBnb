@@ -9,10 +9,7 @@ interface HeartIconProps {
   listing_Id: string;
 }
 export default function HeartIcon({ user, listing_Id }: HeartIconProps) {
-  const { hasFavorited, handleFavorite } = useFavorite(
-    user?.favoriteIds,
-    listing_Id
-  );
+  const { hasFavorited, handleFavorite } = useFavorite(user, listing_Id);
 
   return (
     <div
@@ -29,10 +26,6 @@ export default function HeartIcon({ user, listing_Id }: HeartIconProps) {
           className="fill-white absolute left-[-2px] top-[-2px] z-10"
         />
         <AiFillHeart
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("hi");
-          }}
           size={24}
           className={`${
             hasFavorited ? "fill-red-500" : "fill-neutral-500"
