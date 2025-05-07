@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import UserItem from "./UserItem";
@@ -9,6 +8,7 @@ import useRegisterModal from "../hooks/useRegisterModal";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import useCreateRentModal from "../hooks/useCreateRentModal";
+import UserLogo from "./userLogo";
 
 interface currentUserProps {
   currentUser: User | null;
@@ -44,13 +44,7 @@ export default function UserMenu({ currentUser }: currentUserProps) {
           {currentUser ? (
             <div className="bg-red-600 h-[30px] w-[30px] rounded-full"></div>
           ) : (
-            <Image
-              src="/images/placeholder.jpg"
-              alt="user"
-              width={30}
-              height={30}
-              className="rounded-full"
-            />
+            <UserLogo />
           )}
         </picture>
       </div>

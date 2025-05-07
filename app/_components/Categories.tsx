@@ -1,3 +1,5 @@
+"use client";
+
 import { BsSnow } from "react-icons/bs";
 import { FaSkiing } from "react-icons/fa";
 import {
@@ -15,25 +17,93 @@ import { MdOutlineVilla } from "react-icons/md";
 import { TbBeach, TbMountain, TbPool } from "react-icons/tb";
 import CategoryBox from "./CategoryBox";
 import Container from "./Container";
+import { usePathname } from "next/navigation";
 
 const navigationIcon = [
-  { icon: TbBeach, label: "Beach" },
-  { icon: GiWindmill, label: "Windmills" },
-  { icon: MdOutlineVilla, label: "Modern" },
-  { icon: TbMountain, label: "Mountain" },
-  { icon: TbPool, label: "Pool" },
-  { icon: GiIsland, label: "Island" },
-  { icon: GiBoatFishing, label: "Lake" },
-  { icon: FaSkiing, label: "Skiing" },
-  { icon: GiCastle, label: "Castle" },
-  { icon: GiCaveEntrance, label: "Cave" },
-  { icon: GiForestCamp, label: "Camping" },
-  { icon: BsSnow, label: "Arctic" },
-  { icon: GiCactus, label: "Desert" },
-  { icon: GiBarn, label: "Barns" },
-  { icon: IoDiamond, label: "Lux" },
+  {
+    label: "Beach",
+    icon: TbBeach,
+    description: "This property is close to the beach!",
+  },
+  {
+    label: "Windmills",
+    icon: GiWindmill,
+    description: "This property is has windmills!",
+  },
+  {
+    label: "Modern",
+    icon: MdOutlineVilla,
+    description: "This property is modern!",
+  },
+  {
+    label: "Mountain",
+    icon: TbMountain,
+    description: "This property is in the Mountain!",
+  },
+  {
+    label: "Pools",
+    icon: TbPool,
+    description: "This is property has a beautiful pool!",
+  },
+  {
+    label: "Islands",
+    icon: GiIsland,
+    description: "This property is on an island!",
+  },
+  {
+    label: "Lake",
+    icon: GiBoatFishing,
+    description: "This property is near a lake!",
+  },
+  {
+    label: "Skiing",
+    icon: FaSkiing,
+    description: "This property has skiing activies!",
+  },
+  {
+    label: "Castles",
+    icon: GiCastle,
+    description: "This property is an ancient castle!",
+  },
+  {
+    label: "Caves",
+    icon: GiCaveEntrance,
+    description: "This property is in a spooky cave!",
+  },
+  {
+    label: "Camping",
+    icon: GiForestCamp,
+    description: "This property offers camping activities!",
+  },
+  {
+    label: "Arctic",
+    icon: BsSnow,
+    description: "This property is in arctic environment!",
+  },
+  {
+    label: "Desert",
+    icon: GiCactus,
+    description: "This property is in the desert!",
+  },
+  {
+    label: "Barns",
+    icon: GiBarn,
+    description: "This property is in a barn!",
+  },
+  {
+    label: "Lux",
+    icon: IoDiamond,
+    description: "This property is brand new and luxurious!",
+  },
 ];
+
 export default function Categories() {
+  const path = usePathname();
+
+  if (path !== "/") {
+    return;
+  }
+
   return (
     <Container>
       <div className="flex justify-between overflow-x-auto pt-3">

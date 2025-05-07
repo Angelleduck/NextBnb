@@ -46,14 +46,14 @@ export default function Modal({
   return (
     <div
       onClick={handleClose}
-      className="inset-0 bg-neutral-800/70 fixed z-10 overflow-auto  "
+      className="inset-0 bg-neutral-800/70 fixed z-30 overflow-auto  "
     >
       <form
         onClick={(e) => {
           e.stopPropagation();
         }}
         action={clientAction}
-        className={`transition duration-300 w-full md:max-w-[602px] bg-white mx-auto my-10 rounded-md ${
+        className={`transition duration-300 w-full md:max-w-[602px] bg-white mx-auto mt-10 rounded-md ${
           showModal ? "translate-y-0" : "translate-y-full"
         } ${showModal ? "opacity-100" : "opacity-0"}`}
       >

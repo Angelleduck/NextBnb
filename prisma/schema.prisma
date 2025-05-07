@@ -23,6 +23,7 @@ model User {
   favoriteIds   String[]
   accounts      Account[]
   listings      Listing[]
+  reservation Reservation[]
  
   @@map("users")
 }
@@ -47,7 +48,7 @@ model Account {
   @@map("accounts")
 }
 
-model Listing{
+model Listing {
   id String @id @default(uuid())
   userId String @map("user_id")
   category String
@@ -59,7 +60,22 @@ model Listing{
   guestCount Int
   roomCount Int
   bathroomCount Int
+  reservations Reservation[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("listings")
+}
+
+model Reservation {
+  id String @id @default(uuid())
+  listingId String @map("listing_id")
+  userId String @map("user_Id")
+
+  startDate DateTime
+  endDate DateTime
+  totalPrice Int @map("total_price")
+
+  listing Listing @relation(fields: [listingId],references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
+  @@map("reservations")
 }

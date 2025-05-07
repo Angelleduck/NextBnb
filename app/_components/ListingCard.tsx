@@ -3,6 +3,7 @@ import Image from "next/image";
 import HeartIcon from "./HeartIcon";
 import UserType from "@/types/User";
 import listingType from "@/types/Listing";
+import Link from "next/link";
 
 interface ListingProps {
   listing: listingType;
@@ -15,7 +16,7 @@ export default function ListingCard({ listing, user }: ListingProps) {
   const location = getByValue(listing.location);
 
   return (
-    <div className=" space-y-1 cursor-pointer">
+    <Link href={`listings/${listing.id}`} className=" space-y-1 cursor-pointer">
       <div className="bg-blue-400 relative rounded-xl aspect-square overflow-hidden">
         <picture className="block w-full h-full relative">
           <Image
@@ -35,6 +36,6 @@ export default function ListingCard({ listing, user }: ListingProps) {
       <p className="font-semibold">
         $ {listing.price} <span className="font-thin">night</span>
       </p>
-    </div>
+    </Link>
   );
 }
