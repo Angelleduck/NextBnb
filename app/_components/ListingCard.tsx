@@ -17,7 +17,7 @@ export default function ListingCard({ listing, user }: ListingProps) {
 
   return (
     <Link href={`listings/${listing.id}`} className=" space-y-1 cursor-pointer">
-      <div className="bg-blue-400 relative rounded-xl aspect-square overflow-hidden">
+      <div className="relative rounded-xl aspect-square overflow-hidden">
         <picture className="block w-full h-full relative">
           <Image
             src={listing.imageSrc}

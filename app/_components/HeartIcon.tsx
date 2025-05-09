@@ -14,7 +14,11 @@ export default function HeartIcon({ user, listing_Id }: HeartIconProps) {
   return (
     <div
       onClick={(e) => {
-        e.stopPropagation();
+        //Here we are not using stopPropagation because there is not other onclick
+        //so event won't propagate but there is a link,to which I prevent beheavior
+        //When I click on icon
+        e.preventDefault();
+        // e.stopPropagation();
         handleFavorite(listing_Id);
       }}
       className="absolute top-[14px] right-[14px]"
