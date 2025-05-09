@@ -4,15 +4,15 @@ import useCreateRentModal from "@/app/hooks/useCreateRentModal";
 import Modal from "./Modal";
 import { navigationIcon } from "../Categories";
 import { useMemo, useState } from "react";
-import CategoryInput from "../CategoryInput";
+import CategoryInput from "../Input/CategoryInput";
 import Heading from "../Heading";
 import dynamic from "next/dynamic";
-import SelectCountry from "../SelectCountry";
-import Counter from "../Counter";
-import ImageUpload from "../ImageUpload";
-import Input from "../Input";
+import Counter from "../Input/Counter";
+import ImageUpload from "../Input/ImageUpload";
+import Input from "../Input/Input";
 import createListing from "@/app/actions/createListing";
 import { useRouter } from "next/navigation";
+import SelectCountry from "../Input/SelectCountry";
 
 export interface LocationType {
   value: string;

@@ -34,11 +34,41 @@ async function createReservation({
   });
 }
 
-async function getReservations(listingId: string) {
+//reservation(s) this listing has bee booked many times
+async function getReservationsForSingleListing(listingId: string) {
   return await prisma.reservation.findMany({
     where: {
       listingId,
     },
   });
 }
-export { createReservation, getReservations };
+
+async function getAllMyReservation() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return;
+  }
+
+  return await prisma.reservation.findMany({
+    where: {
+      userId: currentUser.id,
+    },
+    include: {
+      listing: true,
+    },
+  });
+}
+
+async function cancelMyReservation(reservationId: string) {
+  await prisma.reservation.delete({
+    where: {
+      id: reservationId,
+    },
+  });
+}
+export {
+  createReservation,
+  getReservationsForSingleListing,
+  getAllMyReservation,
+  cancelMyReservation,
+};

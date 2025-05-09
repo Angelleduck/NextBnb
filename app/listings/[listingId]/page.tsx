@@ -1,7 +1,7 @@
 import Container from "@/app/_components/Container";
-import UserLogo from "@/app/_components/userLogo";
+import UserLogo from "@/app/_components/User/UserLogo";
 import getListingById from "@/app/actions/getListingById";
-import { getReservations } from "@/app/actions/reservation";
+import { getReservationsForSingleListing } from "@/app/actions/reservation";
 import getCountries from "@/libs/countries";
 import { eachDayOfInterval } from "date-fns";
 import Image from "next/image";
@@ -24,7 +24,7 @@ export default async function Page({ params }: PropsType) {
   const { listingId } = params;
 
   const data = await getListingById(listingId);
-  const reservation = await getReservations(listingId);
+  const reservation = await getReservationsForSingleListing(listingId);
   const author = data?.user;
   const currentUser = await getCurrentUser();
 

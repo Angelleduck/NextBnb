@@ -3,8 +3,8 @@ import Logo from "./Logo";
 
 import Categories from "./Categories";
 import Container from "./Container";
-import UserMenu from "./UserMenu";
 import { User } from "@prisma/client";
+import UserMenu from "./User/UserMenu";
 
 interface currentUserProps {
   currentUser: User | null;

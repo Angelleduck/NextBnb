@@ -3,7 +3,7 @@
 import Modal from "./Modal";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import Input from "../Input";
+import Input from "../Input/Input";
 import Button from "../Button";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { useState } from "react";

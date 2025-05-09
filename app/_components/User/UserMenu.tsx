@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import UserItem from "./UserItem";
-import useLoginModal from "../hooks/useLoginModal";
-import useRegisterModal from "../hooks/useRegisterModal";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
-import useCreateRentModal from "../hooks/useCreateRentModal";
-import UserLogo from "./userLogo";
+import useLoginModal from "@/app/hooks/useLoginModal";
+import useRegisterModal from "@/app/hooks/useRegisterModal";
+import useCreateRentModal from "@/app/hooks/useCreateRentModal";
+import UserLogo from "./UserLogo";
+import UserItem from "./UserItem";
+import { useRouter } from "next/navigation";
 
 interface currentUserProps {
   currentUser: User | null;
@@ -18,6 +19,7 @@ export default function UserMenu({ currentUser }: currentUserProps) {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const CreateRentModal = useCreateRentModal();
+  const router = useRouter();
 
   function onRent() {
     if (!currentUser) {
@@ -52,7 +54,16 @@ export default function UserMenu({ currentUser }: currentUserProps) {
         <div className="absolute shadow-md right-0 top-12 w-[40vw] md:w-3/4 bg-white rounded-xl overflow-hidden text-sm font-semibold cursor-pointer">
           {currentUser ? (
             <>
-              <UserItem onClick={() => {}}>trips</UserItem>
+              <UserItem
+                onClick={() => {
+                  router.push("/trips");
+                }}
+              >
+                trips
+              </UserItem>
+              <UserItem onClick={() => CreateRentModal.onOpen()}>
+                Airbnb my home
+              </UserItem>
               <hr />
               <UserItem onClick={signOut}>Log out</UserItem>
             </>

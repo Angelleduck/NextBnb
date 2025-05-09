@@ -25,7 +25,6 @@ export default function Calendar({
       <DateRange
         editableDateInputs={true}
         onChange={(item) => {
-          console.log(item);
           setState([item.selection]);
 
           //The two date will never be undefined but to make
