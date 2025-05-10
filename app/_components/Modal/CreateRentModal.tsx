@@ -87,31 +87,30 @@ export default function CreateRentModal() {
 
     //I define here because of typescript, optimize later in case
     //we don't go the URL after fetching
-    let imageSrc: string =
-      "https://res.cloudinary.com/ducsubyd2/image/upload/v1746128002/iwmiinowal5japv6ohwb.png";
+    let imageSrc: string = "";
     const locationValue = location!.value;
     const formData = new FormData();
 
-    // async function submitData() {
-    //   // Image will never be undefined because of the above validaitons
-    //   formData.append("file", image!);
-    //   formData.append("upload_preset", "upload-post-preset");
+    async function submitData() {
+      // Image will never be undefined because of the above validaitons
+      formData.append("file", image!);
+      formData.append("upload_preset", "upload-post-preset");
 
-    //   const res = await fetch(
-    //     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
-    //     {
-    //       method: "POST",
-    //       body: formData,
-    //     }
-    //   );
-    //   const data = await res.json();
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
 
-    //   // handle this later in case error
-    //   //set link of image
-    //   imageSrc = data.secure_url;
-    // }
+      // handle this later in case error
+      //set link of image
+      imageSrc = data.secure_url;
+    }
 
-    // await submitData();
+    await submitData();
 
     const data = {
       category,

@@ -1,7 +1,7 @@
 import Select from "react-select";
 import { Dispatch, SetStateAction } from "react";
-import { LocationType } from "./Modal/CreateRentModal";
 import getCountries from "@/libs/countries";
+import { LocationType } from "../Modal/CreateRentModal";
 
 interface country {
   value: string;
