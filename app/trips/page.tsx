@@ -14,8 +14,8 @@ export default async function Page() {
   return (
     <Container>
       <div className="mt-28 mb-24">
-        <h3 className="text-2xl font-bold">Trips</h3>
-        <p className="font-light text-neutral-500">
+        <h3 className="text-2xl font-bold mb-1">Trips</h3>
+        <p className="font-light text-neutral-500 mb-8">
           Where you&apos;ve been and where you&apos;re going
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-7">

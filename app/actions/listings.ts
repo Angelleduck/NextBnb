@@ -82,3 +82,27 @@ export async function getFavoriteListing() {
   );
   return favorites;
 }
+
+export async function getProperties() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return;
+  }
+  return await prisma.listing.findMany({
+    where: {
+      userId: currentUser.id,
+    },
+  });
+}
+
+export async function deleteProperty(propertyId: string) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return;
+  }
+  return await prisma.listing.delete({
+    where: {
+      id: propertyId,
+    },
+  });
+}

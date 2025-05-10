@@ -68,6 +68,13 @@ export default function UserMenu({ currentUser }: currentUserProps) {
               >
                 favorites
               </UserItem>
+              <UserItem
+                onClick={() => {
+                  router.push("/properties");
+                }}
+              >
+                properties
+              </UserItem>
               <UserItem onClick={() => CreateRentModal.onOpen()}>
                 Airbnb my home
               </UserItem>
