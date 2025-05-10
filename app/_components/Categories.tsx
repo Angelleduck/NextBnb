@@ -17,7 +17,7 @@ import { MdOutlineVilla } from "react-icons/md";
 import { TbBeach, TbMountain, TbPool } from "react-icons/tb";
 import CategoryBox from "./CategoryBox";
 import Container from "./Container";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const navigationIcon = [
   {
@@ -99,6 +99,7 @@ const navigationIcon = [
 
 export default function Categories() {
   const path = usePathname();
+  const searchParams = useSearchParams();
 
   if (path !== "/") {
     return;
@@ -108,7 +109,12 @@ export default function Categories() {
     <Container>
       <div className="flex justify-between overflow-x-auto pt-3">
         {navigationIcon.map((Category, idx) => (
-          <CategoryBox key={idx} icon={Category.icon} label={Category.label} />
+          <CategoryBox
+            key={idx}
+            icon={Category.icon}
+            label={Category.label}
+            searchParams={searchParams}
+          />
         ))}
       </div>
     </Container>

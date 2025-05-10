@@ -43,11 +43,7 @@ export default function UserMenu({ currentUser }: currentUserProps) {
         <AiOutlineMenu />
 
         <picture className="hidden sm:block">
-          {currentUser ? (
-            <div className="bg-red-600 h-[30px] w-[30px] rounded-full"></div>
-          ) : (
-            <UserLogo />
-          )}
+          <UserLogo />
         </picture>
       </div>
       {isOpen && (

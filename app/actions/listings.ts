@@ -62,9 +62,15 @@ export async function getListingById(listingId: string) {
   return data;
 }
 
-export async function getListings() {
-  const data = await prisma.listing.findMany();
-  return data;
+export async function getListings(category: string) {
+  if (category) {
+    return await prisma.listing.findMany({
+      where: {
+        category,
+      },
+    });
+  }
+  return await prisma.listing.findMany();
 }
 
 export async function getFavoriteListing() {

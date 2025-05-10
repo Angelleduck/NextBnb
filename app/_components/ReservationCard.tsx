@@ -41,7 +41,7 @@ export default async function ReservationCard({
 
         <HeartIcon user={user} listing_Id={listing.id} />
       </div>
-      <h4 className="font-semibold text-lg">
+      <h4 className="font-semibold text-lg overflow-hidden text-ellipsis whitespace-nowrap">
         {location?.region}, {location?.label}
       </h4>
       <p className="font-light text-neutral-500">

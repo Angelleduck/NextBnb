@@ -3,8 +3,14 @@ import getCurrentUser from "../actions/getCurrentUser";
 import ListingCard from "./ListingCard";
 import { getListings } from "../actions/listings";
 
-export default async function ListingContainer() {
-  const listings = await getListings();
+interface PropsType {
+  searchParams: {
+    category: string;
+  };
+}
+
+export default async function ListingContainer({ searchParams }: PropsType) {
+  const listings = await getListings(searchParams.category);
   const user = await getCurrentUser();
 
   return (
