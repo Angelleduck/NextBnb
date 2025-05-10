@@ -3,6 +3,7 @@ import Container from "../_components/Container";
 import getCurrentUser from "../actions/getCurrentUser";
 import ListingCard from "../_components/ListingCard";
 import { getFavoriteListing } from "../actions/listings";
+import EmptyState from "../_components/EmptyState";
 
 export default async function Page() {
   const currentUser = await getCurrentUser();
@@ -10,6 +11,14 @@ export default async function Page() {
     redirect("/");
   }
   const favorites = await getFavoriteListing();
+  if (favorites?.length == 0) {
+    return (
+      <EmptyState
+        title="No favorites found"
+        subtitle="Looks like you have no favorite listings."
+      />
+    );
+  }
   return (
     <Container>
       <div className="mt-28 mb-24">

@@ -3,6 +3,7 @@ import Container from "../_components/Container";
 import getCurrentUser from "../actions/getCurrentUser";
 import { getAllMyReservation } from "../actions/reservation";
 import ReservationCard from "../_components/ReservationCard";
+import EmptyState from "../_components/EmptyState";
 
 export default async function Page() {
   const currentUser = await getCurrentUser();
@@ -11,6 +12,16 @@ export default async function Page() {
   }
 
   const reservations = await getAllMyReservation();
+
+  if (reservations?.length == 0) {
+    return (
+      <EmptyState
+        title="No trip found"
+        subtitle="Looks like you haven't reserved any trips."
+      />
+    );
+  }
+
   return (
     <Container>
       <div className="mt-28 mb-24">

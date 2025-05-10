@@ -3,6 +3,7 @@ import Container from "../_components/Container";
 import getCurrentUser from "../actions/getCurrentUser";
 import { getProperties } from "../actions/listings";
 import PropertyCard from "../_components/PropertyCard";
+import EmptyState from "../_components/EmptyState";
 
 export default async function page() {
   const currentUser = await getCurrentUser();
@@ -11,6 +12,16 @@ export default async function page() {
   }
 
   const properties = await getProperties();
+
+  if (properties?.length == 0) {
+    return (
+      <EmptyState
+        title="No properties found"
+        subtitle="Looks like you have no properties."
+      />
+    );
+  }
+
   return (
     <Container>
       <div className="mt-28 mb-24">
