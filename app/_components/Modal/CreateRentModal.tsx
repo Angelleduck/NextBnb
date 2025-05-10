@@ -10,9 +10,9 @@ import dynamic from "next/dynamic";
 import Counter from "../Input/Counter";
 import ImageUpload from "../Input/ImageUpload";
 import Input from "../Input/Input";
-import createListing from "@/app/actions/createListing";
 import { useRouter } from "next/navigation";
 import SelectCountry from "../Input/SelectCountry";
+import { createListing } from "@/app/actions/listings";
 
 export interface LocationType {
   value: string;

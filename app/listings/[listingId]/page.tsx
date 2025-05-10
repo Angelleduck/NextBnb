@@ -1,6 +1,5 @@
 import Container from "@/app/_components/Container";
 import UserLogo from "@/app/_components/User/UserLogo";
-import getListingById from "@/app/actions/getListingById";
 import { getReservationsForSingleListing } from "@/app/actions/reservation";
 import getCountries from "@/libs/countries";
 import { eachDayOfInterval } from "date-fns";
@@ -10,6 +9,7 @@ import MapClient from "../MapClient";
 import ReservationSection from "../ReservationSection";
 import HeartIcon from "@/app/_components/HeartIcon";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { getListingById } from "@/app/actions/listings";
 
 interface PropsType {
   params: {
@@ -103,6 +103,7 @@ export default async function Page({ params }: PropsType) {
               disabledDates={disabledDates}
               price={price}
               listingId={listingId}
+              currentUser={currentUser}
             />
           </div>
         </div>

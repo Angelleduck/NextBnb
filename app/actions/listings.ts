@@ -1,0 +1,84 @@
+"use server";
+
+import { prisma } from "@/libs/prisma";
+import getCurrentUser from "./getCurrentUser";
+
+interface DataProps {
+  category: string;
+  location: string;
+  imageSrc: string;
+  titleInput: string;
+  description: string;
+  price: string;
+  guestCount: number;
+  roomCount: number;
+  bathroomCount: number;
+}
+
+export async function createListing(data: DataProps) {
+  const user = await getCurrentUser();
+
+  if (!user) return;
+
+  const {
+    titleInput: title,
+    description,
+    imageSrc,
+    category,
+    roomCount,
+    bathroomCount,
+    guestCount,
+    location,
+    price,
+  } = data;
+
+  await prisma.listing.create({
+    data: {
+      userId: user.id,
+      category,
+      bathroomCount,
+      imageSrc,
+      title,
+      description,
+      guestCount,
+      location,
+      roomCount,
+      price,
+    },
+  });
+}
+
+export async function getListingById(listingId: string) {
+  const data = await prisma.listing.findUnique({
+    where: {
+      id: listingId,
+    },
+    include: {
+      //Here need to include the user since we would need
+      //to know who posted this listing
+      user: true,
+    },
+  });
+  return data;
+}
+
+export async function getListings() {
+  const data = await prisma.listing.findMany();
+  return data;
+}
+
+export async function getFavoriteListing() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return;
+  }
+  if (currentUser.favoriteIds.length == 0) {
+    return [];
+  }
+
+  const listings = await prisma.listing.findMany();
+  const favorites = listings.filter((listing) =>
+    currentUser.favoriteIds.includes(listing.id)
+  );
+  return favorites;
+}

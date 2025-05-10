@@ -5,19 +5,26 @@ import Calendar from "../_components/Calendar";
 import { Range } from "react-date-range";
 import { createReservation } from "../actions/reservation";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import UserType from "@/types/User";
+import useLoginModal from "../hooks/useLoginModal";
 
 interface ReservationProps {
   disabledDates: Date[];
   price: number;
   listingId: string;
+  currentUser: UserType;
 }
 
 export default function ReservationSection({
   disabledDates,
   price,
   listingId,
+  currentUser,
 }: ReservationProps) {
+  const login = useLoginModal();
   const [totalPrice, setTotalPrice] = useState(price);
+  const router = useRouter();
   const [state, setState] = useState<Range[]>([
     {
       startDate: new Date(),
@@ -27,6 +34,10 @@ export default function ReservationSection({
   ]);
 
   async function handleReservation() {
+    if (!currentUser) {
+      login.onOpen();
+      return;
+    }
     const toastId = toast.loading("Loading...");
     try {
       const obj = {
@@ -40,6 +51,7 @@ export default function ReservationSection({
       toast.success("Booked !", {
         id: toastId,
       });
+      router.push("/trips");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error("please try again", {

@@ -1,7 +1,7 @@
-import getListings from "../actions/getListings";
 import Container from "./Container";
 import getCurrentUser from "../actions/getCurrentUser";
 import ListingCard from "./ListingCard";
+import { getListings } from "../actions/listings";
 
 export default async function ListingContainer() {
   const listings = await getListings();
