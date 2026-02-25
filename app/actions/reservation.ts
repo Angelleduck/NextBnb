@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "@/libs/prisma";
-import getCurrentUser from "./getCurrentUser";
+import { getUser } from "@/actions/getUser";
+import { prisma } from "@/lib/prisma";
 
 //issue: handle the error
 
@@ -18,7 +18,7 @@ async function createReservation({
   endDate,
   totalPrice,
 }: ReservationProps) {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
 
   if (!currentUser) return;
   if (!startDate || !endDate) return;
@@ -44,7 +44,7 @@ async function getReservationsForSingleListing(listingId: string) {
 }
 
 async function getAllMyReservation() {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
   if (!currentUser) {
     return;
   }

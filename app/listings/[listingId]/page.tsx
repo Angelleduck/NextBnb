@@ -1,32 +1,29 @@
 import Container from "@/app/_components/Container";
 import UserLogo from "@/app/_components/User/UserLogo";
 import { getReservationsForSingleListing } from "@/app/actions/reservation";
-import getCountries from "@/libs/countries";
+import getCountries from "@/lib/countries";
 import { eachDayOfInterval } from "date-fns";
 import Image from "next/image";
 import IconSection from "../IconSection";
 import MapClient from "../MapClient";
 import ReservationSection from "../ReservationSection";
 import HeartIcon from "@/app/_components/HeartIcon";
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import { getListingById } from "@/app/actions/listings";
+import { getUser } from "@/actions/getUser";
 
 interface PropsType {
-  params: {
+  params: Promise<{
     listingId: string;
-  };
-  searchParams: {
-    [key: string]: string;
-  };
+  }>;
 }
 
 export default async function Page({ params }: PropsType) {
-  const { listingId } = params;
+  const { listingId } = await params;
 
   const data = await getListingById(listingId);
   const reservation = await getReservationsForSingleListing(listingId);
   const author = data?.user;
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
 
   let disabledDates: Date[] = [];
 

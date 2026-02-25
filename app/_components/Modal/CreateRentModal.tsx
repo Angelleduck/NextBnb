@@ -1,7 +1,7 @@
 "use client";
 
 import useCreateRentModal from "@/app/hooks/useCreateRentModal";
-import Modal from "./Modal";
+import Modal from "./rent/Modal";
 import { navigationIcon } from "../Categories";
 import { useMemo, useState } from "react";
 import CategoryInput from "../Input/CategoryInput";
@@ -12,15 +12,11 @@ import ImageUpload from "../Input/ImageUpload";
 import Input from "../Input/Input";
 import { useRouter } from "next/navigation";
 import SelectCountry from "../Input/SelectCountry";
+import { SubmitHandler, useForm } from "react-hook-form";
+import z from "zod";
+import { rentSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createListing } from "@/app/actions/listings";
-
-export interface LocationType {
-  value: string;
-  label: string;
-  flag: string;
-  region: string;
-  latlng: [number, number];
-}
 
 enum Steps {
   category = 0,
@@ -31,21 +27,40 @@ enum Steps {
   price = 5,
 }
 
+type InputField = z.infer<typeof rentSchema>;
+
 export default function CreateRentModal() {
   const router = useRouter();
   const createRentModal = useCreateRentModal();
   const [step, setStep] = useState(Steps.category);
-  const [error, setError] = useState("");
 
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState<LocationType>();
-  const [image, setImage] = useState<File>();
-  const [titleInput, setTitleInput] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("1");
-  const [guestCount, setGuestCount] = useState(1);
-  const [roomCount, setRoomCount] = useState(1);
-  const [bathroomCount, setBathroomCount] = useState(1);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    watch,
+    reset,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<InputField>({
+    resolver: zodResolver(rentSchema),
+    shouldUnregister: false,
+    defaultValues: {
+      price: 1,
+      guestCount: 1,
+      roomCount: 1,
+      bathroomCount: 1,
+    },
+  });
+
+  //we need watch to observe since getValues doesn't re-render when values change
+  const selectedCategory = watch("category");
+  const selectedLocation = watch("location");
+  const selectedImage = watch("image");
+  const selectedGuestCount = watch("guestCount");
+  const selectedRoomCount = watch("roomCount");
+  const selectedBathroomCount = watch("bathroomCount");
 
   const Map = useMemo(
     () =>
@@ -58,42 +73,21 @@ export default function CreateRentModal() {
         ssr: false,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location]
+    [selectedLocation],
   );
 
   const actionLabel = step === Steps.price ? "Create" : "Next";
   const secondaryActionLabel = step !== Steps.category && "Back";
 
-  async function clientAction() {
-    // Validation
-    if (step == Steps.category && !category) {
-      setError("Please select category");
-      return;
-    }
-    if (step == Steps.location && !location) {
-      setError("Please select a place");
-      return;
-    }
-    if (step == Steps.image && !image) {
-      setError("Please provide an image");
-      return;
-    }
-    setError("");
-
-    // When we reach price we can now submit the data
-    if (step !== Steps.price) {
-      return onNext();
-    }
-
+  const onSubmit: SubmitHandler<InputField> = async (data) => {
     //I define here because of typescript, optimize later in case
     //we don't go the URL after fetching
     let imageSrc: string = "";
-    const locationValue = location!.value;
     const formData = new FormData();
 
-    async function submitData() {
+    async function submitData(image: File) {
       // Image will never be undefined because of the above validaitons
-      formData.append("file", image!);
+      formData.append("file", image);
       formData.append("upload_preset", "upload-post-preset");
 
       const res = await fetch(
@@ -101,7 +95,7 @@ export default function CreateRentModal() {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       const data = await res.json();
 
@@ -110,26 +104,61 @@ export default function CreateRentModal() {
       imageSrc = data.secure_url;
     }
 
-    await submitData();
+    await submitData(data.image);
 
-    const data = {
-      category,
-      location: locationValue,
-      imageSrc,
-      titleInput,
-      description,
-      price,
-      guestCount,
-      roomCount,
-      bathroomCount,
-    };
-
-    await createListing(data);
+    await createListing({ ...data, imageSrc, location: data.location.value });
     router.refresh();
     createRentModal.onClose();
-  }
+    reset();
+    setStep(Steps.category);
+  };
 
-  const onNext = () => {
+  const onNext = async () => {
+    setError("root", {
+      message: "",
+    });
+    if (step === Steps.category) {
+      const output = await trigger("category");
+      if (!output) {
+        setError("root", {
+          message: "Please select a category",
+        });
+        return;
+      }
+    }
+
+    if (step === Steps.location) {
+      const output = await trigger("location");
+      if (!output) {
+        setError("root", {
+          message: "Please select a location",
+        });
+        return;
+      }
+    }
+    if (step === Steps.image) {
+      const output = await trigger("image");
+      if (!output) {
+        setError("root", {
+          message: "Please select an image",
+        });
+        return;
+      }
+    }
+    if (step === Steps.describe) {
+      const output = await trigger("title");
+      if (!output) {
+        setError("root", {
+          message: "Please describe the place",
+        });
+        return;
+      }
+    }
+
+    if (step === Steps.price) {
+      await handleSubmit(onSubmit)();
+      return;
+    }
     setStep((state) => state + 1);
   };
   const secondaryAction = () => {
@@ -151,8 +180,10 @@ export default function CreateRentModal() {
             key={idx}
             icon={item.icon}
             label={item.label}
-            onClick={(label: string) => setCategory(label)}
-            selected={category === item.label}
+            onClick={(label: string) =>
+              setValue("category", label, { shouldValidate: true })
+            }
+            selected={selectedCategory === item.label}
           />
         ))}
       </div>
@@ -169,12 +200,16 @@ export default function CreateRentModal() {
           />
         </div>
 
-        <SelectCountry handleLocation={setLocation} location={location} />
+        <SelectCountry
+          handleLocation={(location) => setValue("location", location)}
+          location={selectedLocation}
+        />
 
-        <Map markerPosition={location?.latlng} />
+        <Map markerPosition={selectedLocation?.latlng} />
       </div>
     );
   }
+
   if (step === Steps.info) {
     body = (
       <div className="p-6 flex flex-col gap-8">
@@ -185,24 +220,27 @@ export default function CreateRentModal() {
           />
         </div>
         <Counter
+          key="Guests"
           title="Guests"
           subTitle="How many guests do you allow?"
-          value={guestCount}
-          handleCount={setGuestCount}
+          value={selectedGuestCount}
+          handleCount={(value) => setValue("guestCount", value)}
         />
         <hr />
         <Counter
+          key="Rooms"
           title="Rooms"
           subTitle="How many rooms do you have?"
-          value={roomCount}
-          handleCount={setRoomCount}
+          value={selectedRoomCount}
+          handleCount={(value) => setValue("roomCount", value)}
         />
         <hr />
         <Counter
+          key="Bathrooms"
           title="Bathrooms"
           subTitle="How many bathrooms do you have?"
-          value={bathroomCount}
-          handleCount={setBathroomCount}
+          value={selectedBathroomCount}
+          handleCount={(value) => setValue("bathroomCount", value)}
         />
       </div>
     );
@@ -217,7 +255,10 @@ export default function CreateRentModal() {
             subtitle="Show guests what your place looks like!"
           />
         </div>
-        <ImageUpload handleImage={setImage} imageUploaded={image} />
+        <ImageUpload
+          handleImage={(image: File) => setValue("image", image)}
+          imageUploaded={selectedImage}
+        />
       </div>
     );
   }
@@ -231,21 +272,20 @@ export default function CreateRentModal() {
             subtitle="Short and sweet works best!"
           />
         </div>
-
         <Input
-          value={titleInput}
-          onChange={(e) => setTitleInput(e.target.value)}
+          key="title"
+          register={register}
           label="Title"
           id="title"
-          required
+          type="text"
         />
         <hr />
         <Input
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          key="description"
+          register={register}
           label="Description"
           id="description"
-          required
+          type="text"
         />
       </div>
     );
@@ -261,8 +301,8 @@ export default function CreateRentModal() {
           />
         </div>
         <Input
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          key="price"
+          register={register}
           type="number"
           label="Price"
           id="price"
@@ -278,12 +318,14 @@ export default function CreateRentModal() {
       isOpen={createRentModal.isOpen}
       onClose={createRentModal.onClose}
       Body={body}
-      // Footer={footer}
-      clientAction={clientAction}
+      onSubmit={onSubmit}
+      handleSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
       actionLabel={actionLabel}
       secondaryAction={secondaryAction}
       secondaryActionLabel={secondaryActionLabel}
-      error={error}
+      error={errors.root?.message}
+      onNext={onNext}
     />
   );
 }

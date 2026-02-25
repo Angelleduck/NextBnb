@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 
 interface ImageUploadProps {
-  handleImage: Dispatch<SetStateAction<File | undefined>>;
-  imageUploaded: File | undefined;
+  handleImage: (file: File) => void;
+  imageUploaded?: File;
 }
 export default function ImageUpload({
   handleImage,
@@ -25,6 +25,7 @@ export default function ImageUpload({
       <input
         onChange={(e) => {
           const file = e.target.files?.[0];
+          if (!file) return;
           handleImage(file);
         }}
         className="hidden"

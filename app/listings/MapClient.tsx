@@ -1,6 +1,6 @@
 "use client";
 
-import getCountries from "@/libs/countries";
+import getCountries from "@/lib/countries";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
@@ -22,7 +22,7 @@ export default function MapClient({
         ),
         ssr: false,
       }),
-    []
+    [],
   );
   return <Map markerPosition={location?.latlng} />;
 }

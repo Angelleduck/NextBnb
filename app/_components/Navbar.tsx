@@ -3,14 +3,13 @@ import Logo from "./Logo";
 
 import Categories from "./Categories";
 import Container from "./Container";
-import { User } from "@prisma/client";
 import UserMenu from "./User/UserMenu";
+import { getUser } from "@/actions/getUser";
 
-interface currentUserProps {
-  currentUser: User | null;
-}
+interface currentUserProps {}
 
-export default function Navbar({ currentUser }: currentUserProps) {
+export default async function Navbar() {
+  const currentUser = await getUser();
   return (
     <header className="shadow-sm fixed top-0 w-full bg-white z-20">
       <Container>

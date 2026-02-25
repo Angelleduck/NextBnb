@@ -1,9 +1,9 @@
-import getCountries from "@/libs/countries";
+import getCountries from "@/lib/countries";
 import Image from "next/image";
 import Link from "next/link";
 import HeartIcon from "./HeartIcon";
 import listingType from "@/types/Listing";
-import UserType from "@/types/User";
+import type { UserType } from "@/types/User";
 import DeletePropertiesButton from "../properties/DeletePropertiesButton";
 
 interface ListingProps {

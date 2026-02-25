@@ -5,79 +5,111 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  password      String?
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
   image         String?
-  favoriteIds   String[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  favoriteIds   String[] @default([]) @map("favorite_ids")
+  sessions      Session[]
   accounts      Account[]
   listings      Listing[]
-  reservation Reservation[]
- 
-  @@map("users")
+  reservations  Reservation[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
 }
 
+
 model Listing {
-  id String @id @default(uuid())
-  userId String @map("user_id")
-  category String
-  location String
-  imageSrc String
-  title String
-  description String
-  price String
-  guestCount Int
-  roomCount Int
+  id            String        @id @default(uuid())
+  userId        String        @map("user_id")
+  category      String
+  location      String
+  imageSrc      String
+  title         String
+  description   String
+  price         Int
+  guestCount    Int
+  roomCount     Int
   bathroomCount Int
-  reservations Reservation[]
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservations  Reservation[]
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("listings")
 }
 
 model Reservation {
-  id String @id @default(uuid())
+  id        String @id @default(uuid())
   listingId String @map("listing_id")
-  userId String @map("user_Id")
+  userId    String @map("user_Id")
 
-  startDate DateTime
-  endDate DateTime
-  totalPrice Int @map("total_price")
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int      @map("total_price")
 
-  listing Listing @relation(fields: [listingId],references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("reservations")
 }

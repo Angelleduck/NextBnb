@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { User } from "@prisma/client";
-import { signOut } from "next-auth/react";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useCreateRentModal from "@/app/hooks/useCreateRentModal";
 import UserLogo from "./UserLogo";
 import UserItem from "./UserItem";
 import { useRouter } from "next/navigation";
+import { logout } from "@/actions/logout";
+import type { UserType } from "@/types/User";
 
 interface currentUserProps {
-  currentUser: User | null;
+  currentUser: UserType;
 }
 export default function UserMenu({ currentUser }: currentUserProps) {
   const [isOpen, SetIsOpen] = useState(false);
@@ -26,6 +26,11 @@ export default function UserMenu({ currentUser }: currentUserProps) {
       return loginModal.onOpen();
     }
     CreateRentModal.onOpen();
+  }
+
+  async function signOut() {
+    await logout();
+    router.refresh();
   }
 
   return (

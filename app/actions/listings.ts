@@ -1,27 +1,27 @@
 "use server";
 
-import { prisma } from "@/libs/prisma";
-import getCurrentUser from "./getCurrentUser";
+import { getUser } from "@/actions/getUser";
+import { prisma } from "@/lib/prisma";
 
 interface DataProps {
   category: string;
   location: string;
   imageSrc: string;
-  titleInput: string;
+  title: string;
   description: string;
-  price: string;
+  price: number;
   guestCount: number;
   roomCount: number;
   bathroomCount: number;
 }
 
 export async function createListing(data: DataProps) {
-  const user = await getCurrentUser();
+  const user = await getUser();
 
   if (!user) return;
 
   const {
-    titleInput: title,
+    title,
     description,
     imageSrc,
     category,
@@ -74,23 +74,23 @@ export async function getListings(category: string) {
 }
 
 export async function getFavoriteListing() {
-  const currentUser = await getCurrentUser();
-  if (!currentUser) {
+  const user = await getUser();
+  if (!user) {
     return;
   }
-  if (currentUser.favoriteIds.length == 0) {
+  if (user?.favoriteIds?.length == 0) {
     return [];
   }
 
   const listings = await prisma.listing.findMany();
   const favorites = listings.filter((listing) =>
-    currentUser.favoriteIds.includes(listing.id)
+    user?.favoriteIds?.includes(listing.id),
   );
   return favorites;
 }
 
 export async function getProperties() {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
   if (!currentUser) {
     return;
   }
@@ -102,7 +102,7 @@ export async function getProperties() {
 }
 
 export async function deleteProperty(propertyId: string) {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
   if (!currentUser) {
     return;
   }

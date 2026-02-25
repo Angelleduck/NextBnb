@@ -5,8 +5,8 @@ import Navbar from "./_components/Navbar";
 import LoginModal from "./_components/Modal/LoginModal";
 import RegisterModal from "./_components/Modal/RegisterModal";
 import { Toaster } from "react-hot-toast";
-import getCurrentUser from "./actions/getCurrentUser";
 import CreateRentModal from "./_components/Modal/CreateRentModal";
+import { getUser } from "@/actions/getUser";
 
 export const metadata: Metadata = {
   title: "Nextbnb",
@@ -22,14 +22,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const currentUser = await getCurrentUser();
   return (
     <html lang="en">
       <body className={`${nunito.className}`}>
         <LoginModal />
         <RegisterModal />
         <CreateRentModal />
-        <Navbar currentUser={currentUser} />
+        <Navbar />
         <Toaster />
         {children}
       </body>

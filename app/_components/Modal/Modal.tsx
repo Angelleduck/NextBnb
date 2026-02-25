@@ -2,18 +2,23 @@
 
 import { IoMdClose } from "react-icons/io";
 import { useEffect, useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
 
 interface ModalProps {
   title: string;
-  Body: JSX.Element;
-  Footer?: JSX.Element;
+  Body: React.ReactNode;
+  Footer?: React.ReactNode;
   isOpen: boolean;
   actionLabel: string;
   secondaryActionLabel?: string | false;
   error?: string;
   onClose: () => void;
-  clientAction: (formData: FormData) => Promise<void>;
+  onSubmit: SubmitHandler<any>;
   secondaryAction?: () => void;
+  handleSubmit: (
+    onSubmit: SubmitHandler<any>,
+  ) => (e?: React.BaseSyntheticEvent) => Promise<void>;
+  isSubmitting?: boolean;
 }
 export default function Modal({
   title,
@@ -21,11 +26,13 @@ export default function Modal({
   Footer,
   isOpen,
   onClose,
-  clientAction,
+  onSubmit,
+  handleSubmit,
   secondaryActionLabel,
   secondaryAction,
   actionLabel,
   error,
+  isSubmitting,
 }: ModalProps) {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -52,7 +59,7 @@ export default function Modal({
         onClick={(e) => {
           e.stopPropagation();
         }}
-        action={clientAction}
+        onSubmit={handleSubmit(onSubmit)}
         className={`transition duration-300 w-full md:max-w-[602px] bg-white mx-auto mt-10 rounded-md ${
           showModal ? "translate-y-0" : "translate-y-full"
         } ${showModal ? "opacity-100" : "opacity-0"}`}
@@ -85,7 +92,11 @@ export default function Modal({
                 {secondaryActionLabel}
               </button>
             )}
-            <button className="bg-primary w-full rounded-lg py-3 text-white hover:opacity-80">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-primary w-full rounded-lg py-3 text-white hover:opacity-80"
+            >
               {actionLabel}
             </button>
           </div>

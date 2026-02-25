@@ -1,5 +1,5 @@
-import UserType from "@/types/User";
-import { useState } from "react";
+import type { UserType } from "@/types/User";
+import { useEffect, useState } from "react";
 import useLoginModal from "./useLoginModal";
 import { addToFavorite, removeFromFavorite } from "../actions/updateFavoriteId";
 
@@ -7,9 +7,13 @@ export default function useFavorite(user: UserType, listing_Id: string) {
   const user_favoriteIds = user?.favoriteIds;
 
   const value = user_favoriteIds ? [...user_favoriteIds] : [];
-  const [favoriteIds, setfavoriteIds] = useState(value);
+  const [favoriteIds, setFavoriteIds] = useState(value);
   const [disable, setDisable] = useState(false);
   const loginModal = useLoginModal();
+
+  useEffect(() => {
+    setFavoriteIds(user?.favoriteIds ? [...user.favoriteIds] : []);
+  }, [user]);
 
   const handleFavorite = async (id: string) => {
     if (!user) {
@@ -21,8 +25,8 @@ export default function useFavorite(user: UserType, listing_Id: string) {
       //
 
       setDisable(true);
-      setfavoriteIds((state) =>
-        state.filter((existing_Id) => existing_Id !== id)
+      setFavoriteIds((state) =>
+        state.filter((existing_Id) => existing_Id !== id),
       );
       await removeFromFavorite(id);
 
@@ -34,7 +38,7 @@ export default function useFavorite(user: UserType, listing_Id: string) {
 
       setDisable(true);
 
-      setfavoriteIds([...favoriteIds, id]);
+      setFavoriteIds((state) => [...state, id]);
       await addToFavorite(id);
 
       setDisable(false);

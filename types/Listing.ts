@@ -6,7 +6,7 @@ type listingType = {
   imageSrc: string;
   title: string;
   description: string;
-  price: string;
+  price: number;
   guestCount: number;
   roomCount: number;
   bathroomCount: number;

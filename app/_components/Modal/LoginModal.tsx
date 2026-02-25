@@ -7,20 +7,32 @@ import Input from "../Input/Input";
 import Button from "../Button";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import { useState } from "react";
-import loginAction from "@/app/actions/login";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+import { login } from "@/actions/login";
+import { SubmitHandler, useForm } from "react-hook-form";
+import z from "zod";
+import { loginSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+type InputField = z.infer<typeof loginSchema>;
 
 export default function LoginModal() {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [stateError, setStateError] = useState(false);
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<InputField>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  async function clientAction(formData: FormData) {
-    const res = await loginAction(formData);
-
+  const onSubmit: SubmitHandler<InputField> = async (data) => {
+    const res = await login(data);
     if (res?.error) {
       setStateError(true);
       toast.error(res.error);
@@ -29,7 +41,7 @@ export default function LoginModal() {
       loginModal.onClose();
       router.refresh();
     }
-  }
+  };
 
   const handleCreateAccount = () => {
     loginModal.onClose();
@@ -42,13 +54,32 @@ export default function LoginModal() {
         <p className="text-gray-400">Login to your account!</p>
       </div>
 
-      <Input label="email" type="email" id="email" error={stateError} />
-      <Input
-        label="password"
-        type="password"
-        id="password"
-        error={stateError}
-      />
+      <div>
+        <Input
+          register={register}
+          label="email"
+          type="email"
+          id="email"
+          error={stateError}
+        />
+        {errors.email && (
+          <div className="text-red-500">{errors.email.message}</div>
+        )}
+      </div>
+
+      <div>
+        <Input
+          register={register}
+          label="password"
+          type="password"
+          id="password"
+          error={stateError}
+        />
+
+        {errors.password && (
+          <div className="text-red-500">{errors.password.message}</div>
+        )}
+      </div>
     </div>
   );
 
@@ -81,8 +112,10 @@ export default function LoginModal() {
       Footer={Footer}
       isOpen={loginModal.isOpen}
       onClose={loginModal.onClose}
-      clientAction={clientAction}
+      onSubmit={onSubmit}
       actionLabel="Continue"
+      handleSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
     />
   );
 }

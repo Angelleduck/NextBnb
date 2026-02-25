@@ -6,7 +6,7 @@ import { Range } from "react-date-range";
 import { createReservation } from "../actions/reservation";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import UserType from "@/types/User";
+import type { UserType } from "@/types/User";
 import useLoginModal from "../hooks/useLoginModal";
 
 interface ReservationProps {

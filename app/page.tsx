@@ -4,11 +4,12 @@ interface PropsType {
   params: {
     listingId: string;
   };
-  searchParams: {
+  searchParams: Promise<{
     category: string;
-  };
+  }>;
 }
 
-export default function Home({ searchParams }: PropsType) {
-  return <ListingContainer searchParams={searchParams} />;
+export default async function Home({ searchParams }: PropsType) {
+  const params = await searchParams;
+  return <ListingContainer searchParams={params} />;
 }

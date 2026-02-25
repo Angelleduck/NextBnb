@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import Container from "../_components/Container";
-import getCurrentUser from "../actions/getCurrentUser";
 import ListingCard from "../_components/ListingCard";
 import { getFavoriteListing } from "../actions/listings";
 import EmptyState from "../_components/EmptyState";
+import { getUser } from "@/actions/getUser";
 
 export default async function Page() {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
   if (!currentUser) {
     redirect("/");
   }

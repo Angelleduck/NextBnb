@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import Container from "../_components/Container";
-import getCurrentUser from "../actions/getCurrentUser";
 import { getAllMyReservation } from "../actions/reservation";
 import ReservationCard from "../_components/ReservationCard";
 import EmptyState from "../_components/EmptyState";
+import { getUser } from "@/actions/getUser";
 
 export default async function Page() {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getUser();
   if (!currentUser) {
     redirect("/");
   }

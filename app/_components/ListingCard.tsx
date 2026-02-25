@@ -1,13 +1,13 @@
-import getCountries from "@/libs/countries";
+import getCountries from "@/lib/countries";
 import Image from "next/image";
 import HeartIcon from "./HeartIcon";
-import UserType from "@/types/User";
 import listingType from "@/types/Listing";
 import Link from "next/link";
+import type { UserType } from "@/types/User";
 
 interface ListingProps {
   listing: listingType;
-  user: UserType;
+  user?: UserType;
 }
 
 export default function ListingCard({ listing, user }: ListingProps) {

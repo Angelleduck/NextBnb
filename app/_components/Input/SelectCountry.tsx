@@ -1,22 +1,13 @@
 import Select from "react-select";
-import { Dispatch, SetStateAction } from "react";
-import getCountries from "@/libs/countries";
-import { LocationType } from "../Modal/CreateRentModal";
-
-interface country {
-  value: string;
-  label: string;
-  flag: string;
-  region: string;
-  latlng: [number, number];
-}
+import getCountries from "@/lib/countries";
+import type { LocationType } from "@/types/map";
 
 interface LocationProps {
-  handleLocation: Dispatch<SetStateAction<LocationType | undefined>>;
-  location: LocationType | undefined;
+  handleLocation: (location: LocationType) => void;
+  location: LocationType;
 }
 
-const formatOptionLabel = ({ label, flag, region }: country) => (
+const formatOptionLabel = ({ label, flag, region }: LocationType) => (
   <div className="flex gap-3">
     <div>{flag}</div>
     <div>
@@ -36,7 +27,7 @@ export default function SelectCountry({
       isClearable
       value={location}
       onChange={(country) => {
-        handleLocation(country as country);
+        if (country) handleLocation(country);
       }}
       theme={(theme) => ({
         ...theme,

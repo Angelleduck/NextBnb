@@ -15,9 +15,9 @@ interface MarkerPositionProps {
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: makerIcon2x.src,
-  shadowUrl: markerShadow.src,
+  iconUrl: markerIcon,
+  iconRetinaUrl: makerIcon2x,
+  shadowUrl: markerShadow,
 });
 
 //I found the above code on internet, without it the marker is not working.

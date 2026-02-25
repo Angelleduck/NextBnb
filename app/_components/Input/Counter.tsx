@@ -1,11 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 interface CounterProps {
   title: string;
   subTitle: string;
   value: number;
-  handleCount: Dispatch<SetStateAction<number>>;
+  handleCount: (value: number) => void;
 }
 
 export default function Counter({
@@ -15,11 +14,12 @@ export default function Counter({
   handleCount,
 }: CounterProps) {
   const onAdd = () => {
-    handleCount((state) => state + 1);
+    handleCount(value + 1);
   };
+
   const onSubstract = () => {
     if (value === 1) return;
-    handleCount((state) => state - 1);
+    handleCount(value - 1);
   };
   return (
     <div className="flex justify-between items-center">

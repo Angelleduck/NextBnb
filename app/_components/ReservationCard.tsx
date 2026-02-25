@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import HeartIcon from "./HeartIcon";
-import getCountries from "@/libs/countries";
+import getCountries from "@/lib/countries";
 import listingType from "@/types/Listing";
-import UserType from "@/types/User";
+import type { UserType } from "@/types/User";
 import { dateFormat } from "@/helper/dateFormat";
 import CancelButton from "../trips/CancelButton";
 

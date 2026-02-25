@@ -1,8 +1,8 @@
 import Container from "./Container";
-import getCurrentUser from "../actions/getCurrentUser";
 import ListingCard from "./ListingCard";
 import { getListings } from "../actions/listings";
 import EmptyState from "./EmptyState";
+import { getUser } from "@/actions/getUser";
 
 interface PropsType {
   searchParams: {
@@ -11,8 +11,9 @@ interface PropsType {
 }
 
 export default async function ListingContainer({ searchParams }: PropsType) {
-  const listings = await getListings(searchParams.category);
-  const user = await getCurrentUser();
+  const params = searchParams;
+  const listings = await getListings(params.category);
+  const user = await getUser();
 
   if (listings.length == 0) {
     return <EmptyState showReset />;
