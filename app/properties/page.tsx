@@ -6,12 +6,13 @@ import EmptyState from "../_components/EmptyState";
 import { getUser } from "@/actions/getUser";
 
 export default async function page() {
-  const currentUser = await getUser();
+  const [currentUser, properties] = await Promise.all([
+    getUser(),
+    getProperties(),
+  ]);
   if (!currentUser) {
     redirect("/");
   }
-
-  const properties = await getProperties();
 
   if (properties?.length == 0) {
     return (

@@ -20,10 +20,17 @@ interface PropsType {
 export default async function Page({ params }: PropsType) {
   const { listingId } = await params;
 
-  const data = await getListingById(listingId);
-  const reservation = await getReservationsForSingleListing(listingId);
-  const author = data?.user;
-  const currentUser = await getUser();
+  const [data, reservation, currentUser] = await Promise.all([
+    getListingById(listingId),
+    getReservationsForSingleListing(listingId),
+    getUser(),
+  ]);
+
+  if (!data) {
+    return;
+  }
+
+  const author = data.user;
 
   let disabledDates: Date[] = [];
 
@@ -35,9 +42,6 @@ export default async function Page({ params }: PropsType) {
     disabledDates = [...disabledDates, ...dates];
   });
 
-  if (!data) {
-    return;
-  }
   const { getByValue } = getCountries();
   const location = getByValue(data.location);
   const price = Number(data.price);

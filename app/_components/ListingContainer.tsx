@@ -11,9 +11,10 @@ interface PropsType {
 }
 
 export default async function ListingContainer({ searchParams }: PropsType) {
-  const params = searchParams;
-  const listings = await getListings(params.category);
-  const user = await getUser();
+  const [listings, user] = await Promise.all([
+    getListings(searchParams.category),
+    getUser(),
+  ]);
 
   if (listings.length === 0) {
     return <EmptyState showReset />;

@@ -6,11 +6,13 @@ import EmptyState from "../_components/EmptyState";
 import { getUser } from "@/actions/getUser";
 
 export default async function Page() {
-  const currentUser = await getUser();
+  const [currentUser, favorites] = await Promise.all([
+    getUser(),
+    getFavoriteListing(),
+  ]);
   if (!currentUser) {
     redirect("/");
   }
-  const favorites = await getFavoriteListing();
   if (favorites?.length == 0) {
     return (
       <EmptyState

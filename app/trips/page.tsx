@@ -6,14 +6,16 @@ import EmptyState from "../_components/EmptyState";
 import { getUser } from "@/actions/getUser";
 
 export default async function Page() {
-  const currentUser = await getUser();
+  const [currentUser, reservations] = await Promise.all([
+    getUser(),
+    getAllMyReservation(),
+  ]);
+
   if (!currentUser) {
     redirect("/");
   }
 
-  const reservations = await getAllMyReservation();
-
-  if (reservations?.length == 0) {
+  if (!reservations || reservations.length === 0) {
     return (
       <EmptyState
         title="No trip found"
