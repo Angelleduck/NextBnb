@@ -15,7 +15,7 @@ export default async function ListingContainer({ searchParams }: PropsType) {
   const listings = await getListings(params.category);
   const user = await getUser();
 
-  if (listings.length == 0) {
+  if (listings.length === 0) {
     return <EmptyState showReset />;
   }
 

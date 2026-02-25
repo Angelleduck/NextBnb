@@ -3,7 +3,7 @@
 import { getUser } from "@/actions/getUser";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 
 async function removeFromFavorite(id: string) {
   const user = await getUser();
@@ -21,8 +21,6 @@ async function removeFromFavorite(id: string) {
       favoriteIds: favoriteIds,
     },
   });
-
-  await deleteCookie();
 }
 
 async function addToFavorite(id: string) {
@@ -32,7 +30,7 @@ async function addToFavorite(id: string) {
 
     const favoriteIds = [...user.favoriteIds, id];
 
-    //issue with !, prisma email set to null
+    // issue with !, prisma email set to null
     // await prisma.user.update({
     //   where: {
     //     email: user.email,
@@ -48,15 +46,9 @@ async function addToFavorite(id: string) {
         favoriteIds,
       },
     });
-    await deleteCookie();
   } catch (error) {
     console.log(error);
   }
-}
-
-export async function deleteCookie() {
-  const cookieStore = await cookies();
-  cookieStore.delete("better-auth.session_data");
 }
 
 export { addToFavorite, removeFromFavorite };

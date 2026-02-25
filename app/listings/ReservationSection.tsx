@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Calendar from "../_components/Calendar";
-import { Range } from "react-date-range";
+import type { Range } from "react-date-range";
 import { createReservation } from "../actions/reservation";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";

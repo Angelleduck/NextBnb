@@ -11,8 +11,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import { login } from "@/actions/login";
-import { SubmitHandler, useForm } from "react-hook-form";
-import z from "zod";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import type z from "zod";
 import { loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 

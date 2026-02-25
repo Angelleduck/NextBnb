@@ -1,4 +1,4 @@
-import { FieldValues, Path, UseFormRegister } from "react-hook-form";
+import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
 import { BiDollar } from "react-icons/bi";
 
 interface InputProps<

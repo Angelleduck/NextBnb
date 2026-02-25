@@ -6,7 +6,7 @@ import Container from "./Container";
 import UserMenu from "./User/UserMenu";
 import { getUser } from "@/actions/getUser";
 
-interface currentUserProps {}
+type currentUserProps = {}
 
 export default async function Navbar() {
   const currentUser = await getUser();

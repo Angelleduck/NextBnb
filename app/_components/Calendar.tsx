@@ -1,6 +1,6 @@
 import { differenceInCalendarDays } from "date-fns";
-import { Dispatch, SetStateAction } from "react";
-import { DateRange, Range } from "react-date-range";
+import type { Dispatch, SetStateAction } from "react";
+import { DateRange, type Range } from "react-date-range";
 
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file

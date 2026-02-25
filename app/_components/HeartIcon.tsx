@@ -2,7 +2,7 @@
 
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useFavorite from "../hooks/useFavorite";
-import { UserType } from "@/types/User";
+import type { UserType } from "@/types/User";
 
 interface HeartIconProps {
   user: UserType;

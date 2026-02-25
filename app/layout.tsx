@@ -6,7 +6,6 @@ import LoginModal from "./_components/Modal/LoginModal";
 import RegisterModal from "./_components/Modal/RegisterModal";
 import { Toaster } from "react-hot-toast";
 import CreateRentModal from "./_components/Modal/CreateRentModal";
-import { getUser } from "@/actions/getUser";
 
 export const metadata: Metadata = {
   title: "Nextbnb",

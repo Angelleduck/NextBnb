@@ -1,7 +1,7 @@
 import getCountries from "@/lib/countries";
 import Image from "next/image";
 import HeartIcon from "./HeartIcon";
-import listingType from "@/types/Listing";
+import type listingType from "@/types/Listing";
 import Link from "next/link";
 import type { UserType } from "@/types/User";
 

@@ -1,5 +1,5 @@
-import { ReadonlyURLSearchParams, useRouter } from "next/navigation";
-import { IconType } from "react-icons";
+import { type ReadonlyURLSearchParams, useRouter } from "next/navigation";
+import type { IconType } from "react-icons";
 
 interface CategoryBoxProps {
   icon: IconType;
@@ -12,7 +12,7 @@ export default function CategoryBox({
   searchParams,
 }: CategoryBoxProps) {
   const router = useRouter();
-  const selected = searchParams.get("category") == `${label}`;
+  const selected = searchParams.get("category") === `${label}`;
   return (
     <div
       onClick={() => {
