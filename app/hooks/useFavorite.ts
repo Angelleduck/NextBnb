@@ -2,6 +2,7 @@ import type { UserType } from "@/types/User";
 import { useEffect, useState } from "react";
 import useLoginModal from "./useLoginModal";
 import { addToFavorite, removeFromFavorite } from "../actions/updateFavoriteId";
+import { useRouter } from "next/navigation";
 
 export default function useFavorite(user: UserType, listing_Id: string) {
   const user_favoriteIds = user?.favoriteIds;
@@ -10,6 +11,7 @@ export default function useFavorite(user: UserType, listing_Id: string) {
   const [favoriteIds, setFavoriteIds] = useState(value);
   const [disable, setDisable] = useState(false);
   const loginModal = useLoginModal();
+  const router = useRouter();
 
   useEffect(() => {
     setFavoriteIds(user?.favoriteIds ? [...user.favoriteIds] : []);
@@ -29,6 +31,7 @@ export default function useFavorite(user: UserType, listing_Id: string) {
         state.filter((existing_Id) => existing_Id !== id),
       );
       await removeFromFavorite(id);
+      router.refresh();
 
       setDisable(false);
 
@@ -40,6 +43,7 @@ export default function useFavorite(user: UserType, listing_Id: string) {
 
       setFavoriteIds((state) => [...state, id]);
       await addToFavorite(id);
+      router.refresh();
 
       setDisable(false);
     }

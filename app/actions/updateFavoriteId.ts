@@ -1,9 +1,7 @@
 "use server";
 
 import { getUser } from "@/actions/getUser";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
 
 async function removeFromFavorite(id: string) {
   const user = await getUser();
@@ -31,21 +29,21 @@ async function addToFavorite(id: string) {
     const favoriteIds = [...user.favoriteIds, id];
 
     // issue with !, prisma email set to null
-    // await prisma.user.update({
-    //   where: {
-    //     email: user.email,
-    //   },
-    //   data: {
-    //     favoriteIds: favoriteIds,
-    //   },
-    // });
-
-    await auth.api.updateUser({
-      headers: await headers(),
-      body: {
-        favoriteIds,
+    await prisma.user.update({
+      where: {
+        email: user.email,
+      },
+      data: {
+        favoriteIds: favoriteIds,
       },
     });
+
+    // await auth.api.updateUser({
+    //   headers: await headers(),
+    //   body: {
+    //     favoriteIds,
+    //   },
+    // });
   } catch (error) {
     console.log(error);
   }
