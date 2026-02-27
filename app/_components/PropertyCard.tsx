@@ -2,12 +2,12 @@ import getCountries from "@/lib/countries";
 import Image from "next/image";
 import Link from "next/link";
 import HeartIcon from "./HeartIcon";
-import type listingType from "@/types/Listing";
+import type { ListingType } from "@/types/Listing";
 import type { UserType } from "@/types/User";
 import DeletePropertiesButton from "../properties/DeletePropertiesButton";
 
 interface ListingProps {
-  listing: listingType;
+  listing: ListingType;
   user: UserType;
   propertyId: string;
 }
