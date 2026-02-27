@@ -12,7 +12,7 @@ interface PropsType {
 
 export default async function ListingContainer({ searchParams }: PropsType) {
   const [listings, user] = await Promise.all([
-    getListings(searchParams.category),
+    getListings(searchParams),
     getUser(),
   ]);
 

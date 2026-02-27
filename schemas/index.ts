@@ -61,6 +61,21 @@ const rentSchema = z.object({
   }),
 });
 
+const filterSchema = z.object({
+  location: z
+    .object({
+      value: z.string(),
+      label: z.string(),
+      flag: z.string(),
+      region: z.string(),
+      latlng: z.tuple([z.number(), z.number()]),
+    })
+    .optional(),
+  guestCount: z.number(),
+  roomCount: z.number(),
+  bathroomCount: z.number(),
+});
+
 export {
   loginSchema,
   registerSchema,
@@ -69,4 +84,5 @@ export {
   emailSchema,
   createWorkspaceSchema,
   rentSchema,
+  filterSchema,
 };

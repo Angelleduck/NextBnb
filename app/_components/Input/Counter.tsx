@@ -30,6 +30,7 @@ export default function Counter({
 
       <div className="flex gap-4 items-center">
         <button
+          type="button"
           onClick={onSubstract}
           className="border border-neutral-400 text-neutral-600 h-10 w-10 flex items-center justify-center rounded-full"
         >
@@ -37,6 +38,7 @@ export default function Counter({
         </button>
         <span className="text-neutral-600 text-xl">{value}</span>
         <button
+          type="button"
           onClick={onAdd}
           className="border border-neutral-400 text-neutral-600 h-10 w-10 flex items-center justify-center rounded-full"
         >

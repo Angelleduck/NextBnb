@@ -1,12 +1,11 @@
 import getCountries from "@/lib/countries";
-import Image from "next/image";
 import HeartIcon from "./HeartIcon";
-import type listingType from "@/types/Listing";
+import type { ListingType } from "@/types/Listing";
 import Link from "next/link";
 import type { UserType } from "@/types/User";
 
 interface ListingProps {
-  listing: listingType;
+  listing: ListingType;
   user?: UserType;
 }
 
@@ -19,11 +18,10 @@ export default function ListingCard({ listing, user }: ListingProps) {
     <Link href={`listings/${listing.id}`} className=" space-y-1 cursor-pointer">
       <div className="relative rounded-xl aspect-square overflow-hidden">
         <picture className="block w-full h-full relative">
-          <Image
+          <img
             src={listing.imageSrc}
             alt="listing image"
-            fill
-            className="object-cover object-center hover:scale-110 transition"
+            className="object-cover object-center h-full w-full hover:scale-110 transition"
           />
         </picture>
 

@@ -2,6 +2,7 @@
 
 import { getUser } from "@/actions/getUser";
 import { prisma } from "@/lib/prisma";
+import type { ListingFilter } from "@/types/Listing";
 
 interface DataProps {
   category: string;
@@ -62,15 +63,30 @@ export async function getListingById(listingId: string) {
   return data;
 }
 
-export async function getListings(category: string) {
-  if (category) {
-    return await prisma.listing.findMany({
-      where: {
-        category,
-      },
-    });
+export async function getListings(data: ListingFilter) {
+  const query: ListingFilter = {};
+  const { category, bathroomCount, guestCount, roomCount, location } = data;
+  if (category) query.category = category;
+  if (bathroomCount) {
+    query.bathroomCount = {
+      gte: +bathroomCount,
+    };
   }
-  return await prisma.listing.findMany();
+  if (guestCount) {
+    query.guestCount = {
+      gte: +guestCount,
+    };
+  }
+  if (roomCount) {
+    query.roomCount = {
+      gte: +roomCount,
+    };
+  }
+  if (location) query.location = location;
+
+  return await prisma.listing.findMany({
+    where: query,
+  });
 }
 
 export async function getFavoriteListing() {
@@ -90,20 +106,20 @@ export async function getFavoriteListing() {
 }
 
 export async function getProperties() {
-  const currentUser = await getUser();
-  if (!currentUser) {
+  const user = await getUser();
+  if (!user) {
     return;
   }
   return await prisma.listing.findMany({
     where: {
-      userId: currentUser.id,
+      userId: user.id,
     },
   });
 }
 
 export async function deleteProperty(propertyId: string) {
-  const currentUser = await getUser();
-  if (!currentUser) {
+  const user = await getUser();
+  if (!user) {
     return;
   }
   return await prisma.listing.delete({

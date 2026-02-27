@@ -6,6 +6,7 @@ import LoginModal from "./_components/Modal/LoginModal";
 import RegisterModal from "./_components/Modal/RegisterModal";
 import { Toaster } from "react-hot-toast";
 import CreateRentModal from "./_components/Modal/CreateRentModal";
+import FilterModal from "./_components/Modal/FilterModal";
 
 export const metadata: Metadata = {
   title: "Nextbnb",
@@ -27,6 +28,7 @@ export default async function RootLayout({
         <LoginModal />
         <RegisterModal />
         <CreateRentModal />
+        <FilterModal />
         <Navbar />
         <Toaster />
         {children}

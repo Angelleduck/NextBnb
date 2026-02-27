@@ -4,7 +4,7 @@ import type { LocationType } from "@/types/map";
 
 interface LocationProps {
   handleLocation: (location: LocationType) => void;
-  location: LocationType;
+  location: LocationType | undefined;
 }
 
 const formatOptionLabel = ({ label, flag, region }: LocationType) => (

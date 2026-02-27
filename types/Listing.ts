@@ -1,4 +1,4 @@
-type listingType = {
+type ListingType = {
   id: string;
   userId: string;
   category: string;
@@ -11,4 +11,12 @@ type listingType = {
   roomCount: number;
   bathroomCount: number;
 };
-export default listingType;
+
+type ListingFilter = {
+  category?: string;
+  location?: string;
+  guestCount?: number | { gte: number };
+  roomCount?: number | { gte: number };
+  bathroomCount?: number | { gte: number };
+};
+export type { ListingType, ListingFilter };

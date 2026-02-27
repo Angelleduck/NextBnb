@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
@@ -10,6 +10,7 @@ import UserItem from "./UserItem";
 import { useRouter } from "next/navigation";
 import { logout } from "@/actions/logout";
 import type { UserType } from "@/types/User";
+import { useOnClickOutside } from "usehooks-ts";
 
 interface currentUserProps {
   currentUser: UserType;
@@ -20,6 +21,8 @@ export default function UserMenu({ currentUser }: currentUserProps) {
   const registerModal = useRegisterModal();
   const CreateRentModal = useCreateRentModal();
   const router = useRouter();
+
+  const ref = useRef<HTMLDivElement>(null);
 
   function onRent() {
     if (!currentUser) {
@@ -33,8 +36,14 @@ export default function UserMenu({ currentUser }: currentUserProps) {
     router.refresh();
   }
 
+  const handleClickOutside = () => {
+    SetIsOpen(false);
+  };
+
+  useOnClickOutside(ref as React.RefObject<HTMLElement>, handleClickOutside);
+
   return (
-    <div className="flex items-center gap-4 relative">
+    <div ref={ref} className="flex items-center gap-4 relative">
       <h3
         onClick={onRent}
         className="hidden min-[824px]:block cursor-pointer font-semibold py-3 px-4 hover:bg-gray-100 rounded-full text-sm"
