@@ -11,10 +11,6 @@ const registerSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-const resetSchema = z.object({
-  email: z.string().email("Invalid email address"),
-});
-
 const newPasswordSchema = z
   .object({
     password: z.string().min(8, "Password must be at least 8 characters"),
@@ -79,7 +75,6 @@ const filterSchema = z.object({
 export {
   loginSchema,
   registerSchema,
-  resetSchema,
   newPasswordSchema,
   emailSchema,
   createWorkspaceSchema,
