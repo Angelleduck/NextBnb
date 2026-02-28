@@ -47,7 +47,6 @@ export default function ReservationSection({
         totalPrice,
       };
       await createReservation(obj);
-
       toast.success("Booked !", {
         id: toastId,
       });

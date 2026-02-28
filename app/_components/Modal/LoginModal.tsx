@@ -15,6 +15,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import type z from "zod";
 import { loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { revokeOtherSessions } from "@/lib/auth-client";
 
 type InputField = z.infer<typeof loginSchema>;
 
@@ -40,6 +41,7 @@ export default function LoginModal() {
       toast.success("you are logged in");
       loginModal.onClose();
       router.refresh();
+      revokeOtherSessions();
     }
   };
 
