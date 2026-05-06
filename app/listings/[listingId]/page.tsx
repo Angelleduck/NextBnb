@@ -51,7 +51,7 @@ export default async function Page({ params }: PropsType) {
     //paddings on reponsive
     <Container>
       <div className="mt-28 max-w-5xl mx-auto relative mb-24">
-        <h3 className="font-bold text-2xl mb-2">Funhouse</h3>
+        <h3 className="font-bold text-2xl mb-2">{data.title}</h3>
         <p className="font-light text-neutral-500 mb-6">
           {location?.region}, {location?.label}
         </p>
