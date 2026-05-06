@@ -88,12 +88,15 @@ export default function LoginModal() {
   const Footer = (
     <div className="mt-4 space-y-4">
       <hr />
-      <Button label="continue with Google" Icon={FcGoogle} />
+
+      {/* later */}
+
+      {/* <Button label="continue with Google" Icon={FcGoogle} />
 
       <button className="relative border-2 w-full border-black rounded-lg p-3 hover:opacity-80">
         <FaGithub size={24} className="absolute left-6" />
         continue with Github
-      </button>
+      </button> */}
 
       <div className="flex flex-col gap-2 justify-center font-light pt-2 min-[430px]:flex-row">
         <p className="text-neutral-500">First time using Airbnb ?</p>
