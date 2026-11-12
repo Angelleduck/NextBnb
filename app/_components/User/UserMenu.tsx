@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
@@ -11,21 +11,23 @@ import { useRouter } from "next/navigation";
 import { logout } from "@/actions/logout";
 import type { UserType } from "@/types/User";
 import { useOnClickOutside } from "usehooks-ts";
+import { useCurrentUser } from "@/hooks/user";
 
 interface currentUserProps {
   currentUser: UserType;
 }
-export default function UserMenu({ currentUser }: currentUserProps) {
+export default function UserMenu() {
   const [isOpen, SetIsOpen] = useState(false);
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const CreateRentModal = useCreateRentModal();
   const router = useRouter();
+  const { user } = useCurrentUser();
 
   const ref = useRef<HTMLDivElement>(null);
 
   function onRent() {
-    if (!currentUser) {
+    if (!user) {
       return loginModal.onOpen();
     }
     CreateRentModal.onOpen();
@@ -62,7 +64,7 @@ export default function UserMenu({ currentUser }: currentUserProps) {
       </div>
       {isOpen && (
         <div className="absolute shadow-md right-0 top-12 w-[40vw] md:w-3/4 bg-white rounded-xl overflow-hidden text-sm font-semibold cursor-pointer">
-          {currentUser ? (
+          {user ? (
             <>
               <UserItem
                 onClick={() => {

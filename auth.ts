@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./lib/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { emailVerification, resetPasswordEmail } from "./lib/email";
+import { emailOTP } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -12,20 +13,19 @@ export const auth = betterAuth({
   telemetry: { enabled: false },
   emailAndPassword: {
     enabled: true,
-    // requireEmailVerification: true,
-    //sendResetPass has param user, use it later to go user's email
-    sendResetPassword: async ({ token }) => {
-      await resetPasswordEmail(token);
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, token }) => {
+      await resetPasswordEmail(user.email, token);
     },
   },
 
   emailVerification: {
     sendOnSignIn: true,
     sendOnSignUp: true,
+    autoSignInAfterVerification: true,
     expiresIn: 3600,
-    //sendverification has param user, use it later to go user's email
-    sendVerificationEmail: async ({ token }) => {
-      await emailVerification(token);
+    sendVerificationEmail: async ({ user, url }) => {
+      await emailVerification(user.email, url);
     },
   },
 
@@ -36,7 +36,10 @@ export const auth = betterAuth({
     },
   },
   session: {
-    expiresIn: 60 * 60 * 24,
+    cookieCache: {
+      enabled: true,
+      maxAge: 2 * 60, // Cache duration in seconds (2 minutes)
+    },
   },
   user: {
     additionalFields: {

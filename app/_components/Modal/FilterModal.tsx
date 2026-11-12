@@ -64,7 +64,7 @@ export default function FilterModal() {
   const secondaryActionLabel = step !== STEPS.LOCATION && "Back";
 
   const onSubmit: SubmitHandler<InputField> = async (data) => {
-    const url = `?bathroomCount=${data.bathroomCount}&roomCount=${data.roomCount}&guestroomCount=${data.guestCount}${data.location ? `&location=${data.location.value}` : ""}`;
+    const url = `/?bathroomCount=${data.bathroomCount}&roomCount=${data.roomCount}&guestCount=${data.guestCount}${data.location ? `&location=${data.location.value}` : ""}`;
     router.push(url);
     filterModal.onClose();
     reset();
@@ -74,6 +74,7 @@ export default function FilterModal() {
   const onNext = async () => {
     if (step === STEPS.INFO) {
       await handleSubmit(onSubmit)();
+      return;
     }
     setStep((state) => state + 1);
   };

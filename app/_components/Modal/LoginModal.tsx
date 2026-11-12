@@ -10,12 +10,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
-import { login } from "@/actions/login";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import type z from "zod";
 import { loginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { revokeOtherSessions } from "@/lib/auth-client";
+import { useLogin } from "@/hooks/useLogin";
 
 type InputField = z.infer<typeof loginSchema>;
 
@@ -24,6 +24,7 @@ export default function LoginModal() {
   const registerModal = useRegisterModal();
   const [stateError, setStateError] = useState(false);
   const router = useRouter();
+  const { login } = useLogin();
   const {
     register,
     handleSubmit,
@@ -37,7 +38,9 @@ export default function LoginModal() {
     if (res?.error) {
       setStateError(true);
       toast.error(res.error);
-    } else {
+    } else if (res?.confirmationNeeded) {
+      toast(res.confirmationNeeded);
+    } else if (res?.success) {
       toast.success("you are logged in");
       loginModal.onClose();
       router.refresh();

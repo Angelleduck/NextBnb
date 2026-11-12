@@ -1,4 +1,4 @@
-export function EmailVerification(link: string) {
+export function EmailVerification(url: string) {
   return `
 <html
   dir="ltr"
@@ -48,7 +48,7 @@ export function EmailVerification(link: string) {
                       <tbody>
                         <tr>
                           <td>
-                            <a href="${link}" target="_blank"
+                            <a href="${url}" target="_blank"
                               style="font-size:32px;line-height:40px;color:#000;font-family:HelveticaNeue-Bold;font-weight:700;letter-spacing:6px;padding-bottom:8px;padding-top:8px;margin:0 auto;display:block;text-align:center;margin-top:0;margin-right:auto;margin-bottom:0;margin-left:auto;text-decoration:none">
                               verify
                             </a>

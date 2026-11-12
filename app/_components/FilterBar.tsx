@@ -9,7 +9,7 @@ export function FilterBar() {
   const searchParams = useSearchParams();
 
   const valueLocation = searchParams.get("location") || "";
-  const guestCount = searchParams.get("guestroomCount");
+  const guestCount = searchParams.get("guestCount");
 
   const { onOpen } = useFilterModal();
   const { getByValue } = getCountries();

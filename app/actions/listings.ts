@@ -21,6 +21,16 @@ export async function createListing(data: DataProps) {
 
   if (!user) return;
 
+  if (
+    !Number.isInteger(data.price) ||
+    data.price < 1 ||
+    ![data.guestCount, data.roomCount, data.bathroomCount].every(
+      (count) => Number.isInteger(count) && count >= 1,
+    )
+  ) {
+    throw new Error("A listing needs a valid price and capacity.");
+  }
+
   const {
     title,
     description,
@@ -120,11 +130,12 @@ export async function getProperties() {
 export async function deleteProperty(propertyId: string) {
   const user = await getUser();
   if (!user) {
-    return;
+    throw new Error("You must be logged in to delete a property.");
   }
-  return await prisma.listing.delete({
+  return await prisma.listing.deleteMany({
     where: {
       id: propertyId,
+      userId: user.id,
     },
   });
 }

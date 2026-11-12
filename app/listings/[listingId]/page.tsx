@@ -2,7 +2,6 @@ import Container from "@/app/_components/Container";
 import UserLogo from "@/app/_components/User/UserLogo";
 import { getReservationsForSingleListing } from "@/app/actions/reservation";
 import getCountries from "@/lib/countries";
-import { eachDayOfInterval } from "date-fns";
 import Image from "next/image";
 import IconSection from "../IconSection";
 import MapClient from "../MapClient";
@@ -32,14 +31,17 @@ export default async function Page({ params }: PropsType) {
 
   const author = data.user;
 
-  let disabledDates: Date[] = [];
+  const disabledDates: string[] = [];
 
   reservation.forEach((el) => {
-    const dates = eachDayOfInterval({
-      start: el.startDate,
-      end: el.endDate,
-    });
-    disabledDates = [...disabledDates, ...dates];
+    if (el.endDate <= el.startDate) return;
+    for (
+      let day = el.startDate.getTime();
+      day < el.endDate.getTime();
+      day += 24 * 60 * 60 * 1000
+    ) {
+      disabledDates.push(new Date(day).toISOString().slice(0, 10));
+    }
   });
 
   const { getByValue } = getCountries();

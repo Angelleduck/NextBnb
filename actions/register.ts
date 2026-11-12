@@ -23,11 +23,12 @@ export async function register(data: z.infer<typeof registerSchema>) {
 
     return { success: "Confirmation email sent" };
   } catch (error) {
+    console.log(error);
     if (error instanceof APIError) {
       const err = error.body?.code as ErrorCode;
 
       switch (err) {
-        case "USER_ALREADY_EXISTS":
+        case "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL":
           return { error: "Email already exists" };
         default:
           return { error: "Sorry something went wrong" };

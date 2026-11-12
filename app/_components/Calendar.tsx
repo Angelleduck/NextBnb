@@ -35,11 +35,7 @@ export default function Calendar({
             item.selection.endDate,
             item.selection.startDate
           );
-          if (days) {
-            handleTotalPrice((state) => state * days);
-          } else {
-            handleTotalPrice(price);
-          }
+          handleTotalPrice(price * Math.max(0, days));
         }}
         moveRangeOnFirstSelection={false}
         showDateDisplay={false}

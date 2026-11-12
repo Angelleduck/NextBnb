@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { differenceInCalendarDays, format, parseISO } from "date-fns";
 import Calendar from "../_components/Calendar";
 import type { Range } from "react-date-range";
 import { createReservation } from "../actions/reservation";
@@ -10,7 +11,7 @@ import type { UserType } from "@/types/User";
 import useLoginModal from "../hooks/useLoginModal";
 
 interface ReservationProps {
-  disabledDates: Date[];
+  disabledDates: string[];
   price: number;
   listingId: string;
   currentUser: UserType;
@@ -23,7 +24,8 @@ export default function ReservationSection({
   currentUser,
 }: ReservationProps) {
   const login = useLoginModal();
-  const [totalPrice, setTotalPrice] = useState(price);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const bookedDates = disabledDates.map((date) => parseISO(date));
   const router = useRouter();
   const [state, setState] = useState<Range[]>([
     {
@@ -38,22 +40,28 @@ export default function ReservationSection({
       login.onOpen();
       return;
     }
+    if (
+      !state[0].startDate ||
+      !state[0].endDate ||
+      differenceInCalendarDays(state[0].endDate, state[0].startDate) < 1
+    ) {
+      toast.error("Please select at least one night.");
+      return;
+    }
     const toastId = toast.loading("Loading...");
     try {
       const obj = {
         listingId,
-        startDate: state[0].startDate,
-        endDate: state[0].endDate,
-        totalPrice,
+        startDate: format(state[0].startDate, "yyyy-MM-dd"),
+        endDate: format(state[0].endDate, "yyyy-MM-dd"),
       };
       await createReservation(obj);
       toast.success("Booked !", {
         id: toastId,
       });
       router.push("/trips");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error("please try again", {
+      toast.error(error instanceof Error ? error.message : "Please try again", {
         id: toastId,
       });
     }
@@ -67,7 +75,7 @@ export default function ReservationSection({
       <hr />
       <Calendar
         price={price}
-        disabledDates={disabledDates}
+        disabledDates={bookedDates}
         handleTotalPrice={setTotalPrice}
         state={state}
         setState={setState}
@@ -75,6 +83,7 @@ export default function ReservationSection({
       <hr />
       <div className="p-4">
         <button
+          type="button"
           onClick={handleReservation}
           className="bg-[#64a7ff] w-full py-3 rounded-lg hover:opacity-80 text-white font-semibold transition"
         >
