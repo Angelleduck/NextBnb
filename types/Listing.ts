@@ -15,8 +15,10 @@ type ListingType = {
 type ListingFilter = {
   category?: string;
   location?: string;
-  guestCount?: number | { gte: number };
-  roomCount?: number | { gte: number };
-  bathroomCount?: number | { gte: number };
+  guestCount?: string;
+  roomCount?: string;
+  bathroomCount?: string;
+  startDate?: string;
+  endDate?: string;
 };
 export type { ListingType, ListingFilter };

@@ -1,9 +1,8 @@
 import ListingContainer from "./_components/ListingContainer";
+import type { ListingFilter } from "@/types/Listing";
 
 interface PropsType {
-  searchParams: Promise<{
-    category: string;
-  }>;
+  searchParams: Promise<ListingFilter>;
 }
 
 export default async function Home({ searchParams }: PropsType) {

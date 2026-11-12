@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { differenceInCalendarDays } from "date-fns";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -57,20 +58,34 @@ const rentSchema = z.object({
   }),
 });
 
-const filterSchema = z.object({
-  location: z
-    .object({
-      value: z.string(),
-      label: z.string(),
-      flag: z.string(),
-      region: z.string(),
-      latlng: z.tuple([z.number(), z.number()]),
-    })
-    .optional(),
-  guestCount: z.number(),
-  roomCount: z.number(),
-  bathroomCount: z.number(),
-});
+const filterSchema = z
+  .object({
+    location: z
+      .object({
+        value: z.string(),
+        label: z.string(),
+        flag: z.string(),
+        region: z.string(),
+        latlng: z.tuple([z.number(), z.number()]),
+      })
+      .optional(),
+    guestCount: z.number(),
+    roomCount: z.number(),
+    bathroomCount: z.number(),
+    startDate: z.date({ message: "Please select your dates" }),
+    endDate: z.date({ message: "Please select your dates" }),
+  })
+  .refine((data) => differenceInCalendarDays(data.startDate, new Date()) >= 0, {
+    path: ["startDate"],
+    message: "Please select future dates",
+  })
+  .refine(
+    (data) => differenceInCalendarDays(data.endDate, data.startDate) >= 1,
+    {
+      path: ["endDate"],
+      message: "Please select at least one night",
+    },
+  );
 
 export {
   loginSchema,

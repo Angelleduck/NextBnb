@@ -3,11 +3,10 @@ import ListingCard from "./ListingCard";
 import { getListings } from "../actions/listings";
 import EmptyState from "./EmptyState";
 import { getUser } from "@/actions/getUser";
+import type { ListingFilter } from "@/types/Listing";
 
 interface PropsType {
-  searchParams: {
-    category: string;
-  };
+  searchParams: ListingFilter;
 }
 
 export default async function ListingContainer({ searchParams }: PropsType) {

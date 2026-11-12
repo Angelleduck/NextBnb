@@ -2,6 +2,11 @@
 
 import { getUser } from "@/actions/getUser";
 import { prisma } from "@/lib/prisma";
+import {
+  getReservationNights,
+  parseReservationDate,
+} from "@/lib/reservationDates";
+import type { Prisma } from "@/prisma/generated/prisma/client";
 import type { ListingFilter } from "@/types/Listing";
 
 interface DataProps {
@@ -74,8 +79,16 @@ export async function getListingById(listingId: string) {
 }
 
 export async function getListings(data: ListingFilter) {
-  const query: ListingFilter = {};
-  const { category, bathroomCount, guestCount, roomCount, location } = data;
+  const query: Prisma.ListingWhereInput = {};
+  const {
+    category,
+    bathroomCount,
+    guestCount,
+    roomCount,
+    location,
+    startDate,
+    endDate,
+  } = data;
   if (category) query.category = category;
   if (bathroomCount) {
     query.bathroomCount = {
@@ -93,6 +106,22 @@ export async function getListings(data: ListingFilter) {
     };
   }
   if (location) query.location = location;
+
+  if (startDate && endDate) {
+    try {
+      const checkIn = parseReservationDate(startDate);
+      const checkOut = parseReservationDate(endDate);
+      getReservationNights(checkIn, checkOut);
+      query.reservations = {
+        none: {
+          startDate: { lt: checkOut },
+          endDate: { gt: checkIn },
+        },
+      };
+    } catch {
+      // Ignore invalid dates in manually edited URLs.
+    }
+  }
 
   return await prisma.listing.findMany({
     where: query,
